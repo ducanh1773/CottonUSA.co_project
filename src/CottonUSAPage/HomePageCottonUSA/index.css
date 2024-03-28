@@ -1,0 +1,29 @@
+.imgOnHomePage{
+    width: 100%;
+    background-image: black;
+}
+.imgOnHomePage img{
+    width: 100%;
+
+}
+.HeaderOnHomePageCottonUSA{
+    position: sticky;
+    top: 0px;
+    background-color: white;
+    z-index: 5;
+}
+.itermPrdHomePageCottonUSA{
+    width: 100%;
+    display: flex;
+}
+.itermPrdHomePageCottonUSA{
+    margin-top: 5%;
+}
+.allItermPrdInHomePage{
+    margin-left: 3%;
+}
+
+.allItermPrdInHomePage h1{
+    font-size: 40px;
+    color: rgb(95, 93, 93);
+}

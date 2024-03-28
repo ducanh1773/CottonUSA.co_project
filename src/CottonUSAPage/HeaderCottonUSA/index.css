@@ -1,0 +1,97 @@
+.allHeaderPage {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding-top: 1%;
+}
+
+.allHeaderPage box-icon:hover {
+    color: #c1c1c1;
+    cursor: pointer;
+}
+
+.logoCottonUSA {
+    width: 5%;
+    margin-left: 5%;
+    cursor: pointer;
+
+}
+
+.allItermSearchCottonUSA {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    margin-left: 20%;
+    font-size: 12px;
+    width: 40%;
+    margin-right: 20%;
+
+}
+
+.allItermSearchCottonUSA h2 {
+    margin: 0;
+    margin-right: 3%;
+    cursor: pointer;
+
+}
+
+.allItermSearchCottonUSA h2:hover {
+    color: rgb(167, 167, 167);
+}
+
+.itermDropdownHeader {
+    display: flex;
+}
+
+.iconHeaderCottonUSA {
+    width: 10%;
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+
+}
+
+.iconHeaderCottonUSA box-icon {
+    cursor: pointer;
+
+}
+
+.itermDropDownHoodies {
+    width: 10%;
+    border: 1px solid rgb(179, 177, 177);
+    display: grid;
+    justify-content: center;
+   
+}
+
+.itermDropDownHoodies p {
+
+    width: 100%;
+    margin: 0;
+    margin-top: 5%;
+    margin-bottom: 15%;
+    cursor: pointer;
+    height: 22px;
+    color: #837d7d;
+}
+
+.itermDropDownHoodies p:hover{
+   border-bottom: 1px solid black ;
+   transition: 1s;
+   position: relative;
+   animation: mymove 2s infinite;
+   animation-timing-function: linear;
+   color: black;
+
+}
+
+@keyframes mymove {
+    from {left: 0px;}
+    to {left: 10px;}
+  }
+  .itermDropDownHoodies{
+    margin-left: 46%;
+    background-color: white;
+    position: fixed;
+  }
+  .itermDropdownMore{
+    margin-left: 58%;
+}

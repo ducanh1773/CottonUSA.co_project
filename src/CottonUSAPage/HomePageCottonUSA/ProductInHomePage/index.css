@@ -1,0 +1,40 @@
+.allItermOnPrdCottonUSA {
+    
+    width: 80%;
+    display: grid;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.imgPrdOnHomePageCottonUSA img {
+    width: 100%;
+    margin-top: 4%;
+    
+}
+
+.namePrdHomePageCottonUSA{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.namePrdHomePageCottonUSA h4{
+    font-weight: 1000;
+}
+.pricePrdCottonUSA{
+    color: red;
+    margin-left: 5%;
+}
+
+.priceReduceCottonUSA{
+    position: absolute;
+    background-color: rgb(186, 41, 41);
+    color: white;
+    font-weight: 1000;
+    margin-top: 1%;
+}
+.priceReduceCottonUSA p{
+    font-size: 14px;
+    margin: 4px;
+   
+}

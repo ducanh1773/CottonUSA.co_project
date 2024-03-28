@@ -1,0 +1,81 @@
+.allEndPageCottonUSA {
+    margin-top: 5%;
+    padding-top: 3%;
+    background-color: rgb(242, 241, 241);
+    padding-bottom: 5%;
+    color: rgb(155, 155, 155);
+    display: flex;
+}
+
+.allEndPageCottonUSA h3{
+    color: black;
+}
+.allEndPageCottonUSA p:hover{
+    color: black;
+    transition: 1s;
+    cursor: pointer;
+}
+
+.mainLeftEndPage {
+    width: 30%;
+    margin-left: 5%;
+}
+
+.mainLeftEndPage h2 {
+    color: black;
+}
+
+.mainLeftEndPage img {
+    width: 20%;
+}
+
+.resistCottonUSA{
+    width: 95%;
+    border: 1px solid black;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 100px;
+}
+.resistCottonUSA input{
+    width: 90%;
+    height: 46px;
+    font-size: 16px;
+    padding-left: 3%;
+    border: none;
+    outline: none;
+    background-color: rgb(242, 241, 241);
+    font-weight: 400;
+}
+
+
+.resistCottonUSA box-icon:hover{
+    color:black ;
+    background-color: white;
+    
+}
+
+.resistCottonUSA box-icon{
+    margin-right: 3%;
+    
+    
+}
+
+.informationEndPage{
+    margin-left: 2%;
+}
+.supportCustomerEndPage{
+    margin-left: 5%;
+}
+.contactCottonUSA{
+    margin-left: 10%;
+}
+.allEndPageCottonUSA a{
+    color: rgb(155, 155, 155);
+}
+
+.contactCottonUSA p:hover{
+    color: rgb(155, 155, 155);
+    cursor:auto;
+}

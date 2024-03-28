@@ -1,0 +1,30 @@
+import logo from './logo.svg';
+import './App.css';
+import HeaderCottonUSA from './CottonUSAPage/HeaderCottonUSA';
+import { useState, useEffect } from 'react';
+import HomePageCottonUSA from './CottonUSAPage/HomePageCottonUSA';
+import SignInCottonUSA from './CottonUSAPage/SignInPageCottonUSA';
+import SignUpCottonUSA from './CottonUSAPage/SignUpCottonUSA';
+import ProductPage from './CottonUSAPage/ProductPage';
+import { Routes, Route, Outlet, Link, Router, BrowserRouter } from "react-router-dom";
+import AboutUsCottonUSA from './CottonUSAPage/InformationCottonUSAPage';
+import ReturnPolicy from './CottonUSAPage/ChinhSachDoiTra';
+
+function App() {
+  return (
+    <div>
+      <Routes>
+        <Route path='/' element={<HomePageCottonUSA></HomePageCottonUSA>}></Route>
+        <Route path='*/' element={<HomePageCottonUSA></HomePageCottonUSA>}></Route>
+        <Route path='/dangnhapCottonUSA' element={<SignInCottonUSA></SignInCottonUSA>}></Route>
+        <Route path='/DANGKYCOTTONUSA' element={<SignUpCottonUSA></SignUpCottonUSA>}></Route>
+        <Route path='/collection/t-shirt' element={<ProductPage></ProductPage>}></Route>
+        <Route path='/AboutUs' element={<AboutUsCottonUSA></AboutUsCottonUSA>}></Route>
+        <Route path='/Chinh-sach-doi-tra-va-bao-hanh' element={<ReturnPolicy></ReturnPolicy>}></Route>
+      </Routes>
+    </div>
+
+  )
+}
+
+export default App;

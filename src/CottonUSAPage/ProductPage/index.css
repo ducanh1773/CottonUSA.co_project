@@ -1,0 +1,51 @@
+.PrdInListItermPage {
+    display: flex;
+}
+
+.allItermAndSelectionPrd {
+    display: flex;
+}
+
+.SubjectPageItermList {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    font-size: 30px;
+    margin-bottom: 3%;
+}
+
+.arrangeIterm {
+    display: flex;
+}
+
+.arrangeIterm p {
+    margin: 0;
+}
+
+.subjectArrangeIterm {
+    display: flex;
+    margin-left: 2%;
+    width: 70%;
+}
+
+.arrangeItermButton {
+    display: flex;
+    align-items: center;
+}
+
+.arrangeItermButton p {
+    margin: 0;
+}
+
+.arrangeItermButton h5 {
+    margin: 0;
+}
+
+.allItermAndSelectionPrd {
+    display: flex;
+}
+
+.mainLeftAllItermAndSelectionPrd {
+    margin-left: 2%;
+    width: 40%;
+}

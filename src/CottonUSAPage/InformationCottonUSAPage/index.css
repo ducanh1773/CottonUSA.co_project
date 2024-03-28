@@ -1,0 +1,37 @@
+.allAboutUsPage {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    
+
+}
+.allAboutUsPage h4{
+    margin: 0;
+    text-transform:capitalize;
+    font-size: 18px;
+    margin-bottom: 1%;
+}
+.allAboutUsPage p{
+    margin: 0;
+    font-weight: 600;
+}
+
+.aboutusPage {
+    width: 50%;
+    display: grid;
+    justify-content: center;
+}
+.subjectAboutUs{
+    display: flex;
+    justify-content: center;
+    font-size: 35px
+}
+.itermOnAboutUsPage{
+    margin-bottom: 5%;
+}
+.headerOnAboutUSPage{
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 5;
+}

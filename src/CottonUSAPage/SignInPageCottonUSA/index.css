@@ -1,0 +1,77 @@
+a{
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+}
+.allFormSignInCottonUSA {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+    margin-bottom: 3%;
+}
+
+.formSignInCottonUSA {
+    background-color: rgb(237, 237, 237);
+    width: 45%;
+    display: grid;
+    height: 500px;
+}
+
+.formSignInCottonUSA h1 {
+    font-size: 50px;
+    margin-bottom: 0;
+    font-weight: 800;
+    margin-left: 30%;
+}
+
+.formSignInCottonUSA input {
+    margin-top: 1%;
+    width: 60%;
+    margin-left: 20%;
+    height: 50px;
+    background-color: rgb(237, 237, 237);
+    border: 1px solid rgb(169, 168, 168);
+    padding-left: 3%;
+    outline: none;
+    font-size: 14px;
+}
+.formSignInCottonUSA p{
+    margin: 0;
+    margin-left: 20%;
+    text-decoration: underline;
+    color: rgb(119, 118, 118);
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.formSignInCottonUSA p:hover{
+    text-decoration: none;
+    transition: 1s;
+    transform: scaleX();
+}
+
+.allFormSignInCottonUSA button{
+    width: 65%;
+    margin-left: 20%;
+    font-size: 20px;
+    font-weight: 700;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    
+}
+
+.allFormSignInCottonUSA button:hover{
+    background-color: white;
+    color: black;
+    transition: 1s;
+}
+
+#ResisterButton{
+   
+    font-size: 18px;
+    margin-left: 48%;
+    margin-top: 5%;
+}
+
+   
