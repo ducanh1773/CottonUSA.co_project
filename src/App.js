@@ -9,6 +9,10 @@ import ProductPage from './CottonUSAPage/ProductPage';
 import { Routes, Route, Outlet, Link, Router, BrowserRouter } from "react-router-dom";
 import AboutUsCottonUSA from './CottonUSAPage/InformationCottonUSAPage';
 import ReturnPolicy from './CottonUSAPage/ChinhSachDoiTra';
+import PolicyAndService from './CottonUSAPage/PolIcyAndService';
+import SecurityPrivate from './CottonUSAPage/SecurityPrivate';
+import ContactPageUSA from './CottonUSAPage/ContactPageCottonUSA';
+import ProductDetailCottonUSA from './CottonUSAProductDetail';
 
 function App() {
   return (
@@ -21,6 +25,10 @@ function App() {
         <Route path='/collection/t-shirt' element={<ProductPage></ProductPage>}></Route>
         <Route path='/AboutUs' element={<AboutUsCottonUSA></AboutUsCottonUSA>}></Route>
         <Route path='/Chinh-sach-doi-tra-va-bao-hanh' element={<ReturnPolicy></ReturnPolicy>}></Route>
+        <Route path='/Điều-khoản-và-dịch-vụ' element={<PolicyAndService></PolicyAndService>}></Route>
+        <Route path='/chinh-sach-bảo-mật' element={<SecurityPrivate></SecurityPrivate>}></Route>
+        <Route path='/contact' element={<ContactPageUSA></ContactPageUSA>}></Route>
+        <Route path='/products'element={<ProductDetailCottonUSA></ProductDetailCottonUSA>}></Route>
       </Routes>
     </div>
 

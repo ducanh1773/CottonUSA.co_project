@@ -3,6 +3,7 @@ import HeaderCottonUSA from "../HeaderCottonUSA";
 import EndPageCottonUSA from "../endPage";
 import "./index.css"
 import ProductCottonUSAInHomePage from "../HomePageCottonUSA/ProductInHomePage"
+import { Link } from "react-router-dom";
 function ProductPage() {
     const info1 = [{ imgUrl1: "https://cottonusa.co/cdn/shop/files/1_6.jpg?v=1696431420&width=800", name: "MLB Los Angeles Dodgers Logo Red T-Shirt", price: '119.000' }]
     return (
@@ -37,7 +38,8 @@ function ProductPage() {
                 <div>
 
                     <div className="PrdInListItermPage">
-                        <ProductCottonUSAInHomePage InformationPrd={info1}></ProductCottonUSAInHomePage>
+                        <Link to="/products"><ProductCottonUSAInHomePage InformationPrd={info1}></ProductCottonUSAInHomePage>
+                        </Link>
                         <ProductCottonUSAInHomePage InformationPrd={info1}></ProductCottonUSAInHomePage>
                         <ProductCottonUSAInHomePage InformationPrd={info1}></ProductCottonUSAInHomePage>
                     </div>

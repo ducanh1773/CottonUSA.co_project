@@ -1,0 +1,74 @@
+.allPageCottonUSA {
+    display: flex;
+    margin-top: 5%;
+    margin-left: 5%;
+}
+.allPageCottonUSA input{
+    padding-left: 3%;
+    font-weight: 600;
+    outline: none;
+    border: 1px solid rgb(222, 222, 222);
+    background-color: rgb(248, 248, 248);
+}
+
+.mainLeftAllPageCottonUSAContact{
+    width: 40%;
+}
+.mainLeftAllPageCottonUSAContact h3{
+    
+}
+
+.mainLeftAllPageCottonUSAContact h1{
+    font-size: 60px;
+    margin-bottom: 2%;
+    margin-top: 2%;
+}
+.mainLeftAllPageCottonUSAContact p{
+    font-size: 18px;
+    color: rgb(168, 168, 168);
+}
+
+.mainRightAllPageCottonUSAContact{
+    width: 50%;
+    background-color: rgb(248, 248, 248);
+    padding: 3%;
+}
+
+.inputNameInMainRightAllPageCottonUSAContact{
+    display: flex;
+
+}
+.inputNameInMainRightAllPageCottonUSAContact input{
+    width: 80%;
+    height: 50px;
+}
+
+.inputNameInMainRightAllPageCottonUSAContact div{
+    width: 50%;
+}
+.messageInAllPageContact{
+    margin-top: 2%;
+    height: 100px;
+    margin-bottom: 3%;
+}
+.messageInAllPageContact input{
+    height: 100px;
+    width: 90%;
+}
+
+.sendMassageContactPageCottonUSA{
+    width: 25%;
+    height: 50px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    background-color: black;
+    color: white;
+    border: 3px solid black;
+}
+
+.sendMassageContactPageCottonUSA:hover{
+    background-color: white;
+    color: black;
+    transition: 1s;
+}

@@ -17,14 +17,14 @@ function EndPageCottonUSA() {
             <div className="informationEndPage">
                 <h3>Thông tin</h3>
                 <Link to="/AboutUs"><p>About us</p></Link>
-                <p>Liên hệ chúng tôi</p>
+                <Link to="/contact"><p>Liên hệ chúng tôi</p></Link>
             </div>
             <div className="supportCustomerEndPage">
                 <h3>Hỗ trợ khách hàng</h3>
                 <Link to="/Chinh-sach-doi-tra-va-bao-hanh"><p>Chính sách đổi trả và bảo hành</p></Link>
-                <p>Chính sách vận chuyển</p>
-                <p>Điều khoản dịch vụ</p>
-                <p>Chính sách bảo mật</p>
+                <Link to="/Chinh-sach-doi-tra-va-bao-hanh"><p>Chính sách vận chuyển</p></Link>
+                <Link to="/Điều-khoản-và-dịch-vụ"><p>Điều khoản dịch vụ</p></Link>
+                <Link to="/chinh-sach-bảo-mật"><p>Chính sách bảo mật</p></Link>
             </div>
             <div className="contactCottonUSA">
                 <h3>Dịch vụ khách hàng</h3>
