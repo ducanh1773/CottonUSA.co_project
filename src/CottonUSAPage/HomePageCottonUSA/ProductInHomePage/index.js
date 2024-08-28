@@ -21,7 +21,7 @@ function ProductCottonUSAInHomePage(props) {
         )
     })
     return (
-        <div>
+        <div style={{display:'flex'}}>
             {Information}
         </div>
     )

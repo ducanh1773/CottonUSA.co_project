@@ -13,7 +13,13 @@ import PolicyAndService from './CottonUSAPage/PolIcyAndService';
 import SecurityPrivate from './CottonUSAPage/SecurityPrivate';
 import ContactPageUSA from './CottonUSAPage/ContactPageCottonUSA';
 import ProductDetailCottonUSA from './CottonUSAProductDetail';
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 
+import {getTodos ,postTodo} from "../src/CottonUSAPage/SignInPageCottonUSA";
+const queryClient = new QueryClient()
 function App() {
   return (
     <div>
@@ -29,9 +35,9 @@ function App() {
         <Route path='/chinh-sach-bảo-mật' element={<SecurityPrivate></SecurityPrivate>}></Route>
         <Route path='/contact' element={<ContactPageUSA></ContactPageUSA>}></Route>
         <Route path='/products'element={<ProductDetailCottonUSA></ProductDetailCottonUSA>}></Route>
+      
       </Routes>
     </div>
-
   )
 }
 

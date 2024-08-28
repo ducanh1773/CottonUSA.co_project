@@ -27,6 +27,7 @@
     height: 50px;
     display: flex;
     align-items: center;
+    
 }
 
 .inputFormResisterCottonUSA input {
@@ -64,4 +65,7 @@
 .ButtonInputFormResisterCottonUSA p:hover{
     transition: 1s;
     text-decoration: none;
+}
+.errorMessage{
+    color: red;
 }

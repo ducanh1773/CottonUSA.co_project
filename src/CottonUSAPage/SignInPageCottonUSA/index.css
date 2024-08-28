@@ -73,5 +73,75 @@ a{
     margin-left: 48%;
     margin-top: 5%;
 }
-
+.loadingPageSignUp {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Chiều cao toàn màn hình */
+    background-color: rgba(0, 0, 0, 0.7); /* Màu nền bán trong suốt */
+    color: #fff; /* Màu chữ trắng */
+    font-size: 24px; /* Kích thước chữ */
+    font-weight: bold; /* Độ dày chữ */
+    text-align: center; /* Căn giữa chữ */
+    position: fixed; /* Giữ thẻ cố định khi cuộn */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999; /* Đảm bảo lớp này nổi lên trên các phần tử khác */
+  }
+  
+  .loadingPageSignUp::before {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 50px;
+    border: 6px solid #fff;
+    border-top: 6px solid #007bff; /* Màu xanh lam cho hiệu ứng xoay */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 10px; /* Khoảng cách giữa icon và text */
+  }
+  
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
    
+  .errorMessage {
+    color: #ff0000; /* Màu chữ đỏ để biểu thị lỗi */
+    background-color: #ffe6e6; /* Màu nền nhạt để nổi bật thông báo */
+    border: 1px solid #ff0000; /* Đường viền đỏ */
+    padding: 10px 15px; /* Khoảng cách bên trong thẻ */
+    border-radius: 5px; /* Bo tròn các góc */
+    font-size: 16px; /* Kích thước chữ */
+    font-weight: bold; /* Độ dày chữ */
+    display: flex; /* Sử dụng Flexbox để căn giữa */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    margin-bottom: 15px; /* Khoảng cách dưới để tách biệt với các phần tử khác */
+  }
+  
+  .errorMessage::before {
+    content: '⚠️'; /* Icon cảnh báo */
+    margin-right: 10px; /* Khoảng cách giữa icon và text */
+    font-size: 20px; /* Kích thước icon */
+  }
+
+  .successMessage {
+    color: #155724; /* Màu chữ xanh đậm để biểu thị thành công */
+    background-color: #d4edda; /* Màu nền xanh nhạt để tạo cảm giác tươi mới */
+    border: 1px solid #c3e6cb; /* Đường viền xanh nhạt */
+    padding: 10px 15px; /* Khoảng cách bên trong thẻ */
+    border-radius: 5px; /* Bo tròn các góc */
+    font-size: 16px; /* Kích thước chữ */
+    font-weight: bold; /* Độ dày chữ */
+    display: flex; /* Sử dụng Flexbox để căn giữa */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    margin-bottom: 15px; /* Khoảng cách dưới để tách biệt với các phần tử khác */
+  }
+  
+  .successMessage::before {
+    content: '✔️'; /* Icon checkmark để biểu thị thành công */
+    margin-right: 10px; /* Khoảng cách giữa icon và text */
+    font-size: 20px; /* Kích thước icon */
+  }
