@@ -7,76 +7,7 @@ import { Route , Link } from "react-router-dom";
 import axios from "axios";
 import{ useState, useEffect } from 'react';
 function HomePageCottonUSA() {
-    const [info1, setInfo1] = useState([
-        { 
-          imgUrl1: "https://cottonusa.co/cdn/shop/files/1_6.jpg?v=1696431420&width=800", 
-          name: "MLB Los Angeles Dodgers Logo Red T-Shirt", 
-          price: '119.000' 
-        }
-      ]);
-    
-      // Sử dụng useEffect để fetch dữ liệu khi component được render
-      useEffect(() => {
-        fetch('http://localhost:80/api/products')
-          .then(response => response.json()) // Convert response to JSON
-          .then(data => {
-            console.log(data); // Log the received data for debugging
-        
-            // Kiểm tra xem dữ liệu có phải là một mảng và không rỗng
-            if (Array.isArray(data) && data.length > 0) {
-              // Chuyển đổi dữ liệu sang cấu trúc của info1
-              const updatedProducts = data.map(product => ({
-                imgUrl1: product.img_product, // Sử dụng key phù hợp từ phản hồi API
-                name: product.nameProduct,
-                price: product.priceProduct
-              }));
-        
-              // Cập nhật state với dữ liệu mới
-              setInfo1(updatedProducts);
-            } else {
-              console.log('No products found');
-            }
-          })
-          .catch(error => {
-            console.error('Error fetching products:', error);
-          });
-      }, []); // [] đảm bảo useEffect chỉ chạy một lần khi component được mount
-
-      const [info2, setInfo2] = useState([
-        { 
-          imgUrl1: "https://cottonusa.co/cdn/shop/files/1_6.jpg?v=1696431420&width=800", 
-          name: "MLB Los Angeles Dodgers Logo Red T-Shirt", 
-          price: '119.000' 
-        }
-      ]);
-    
-      // Sử dụng useEffect để fetch dữ liệu khi component được render
-      useEffect(() => {
-        fetch('http://localhost:80/api/products')
-          .then(response => response.json()) // Convert response to JSON
-          .then(data => {
-            console.log(data); // Log the received data for debugging
-        
-            // Kiểm tra xem dữ liệu có phải là một mảng và không rỗng
-            if (Array.isArray(data) && data.length > 0) {
-              // Chuyển đổi dữ liệu sang cấu trúc của info1
-              const updatedProducts = data.map(product => ({
-                imgUrl1: product.img_product, // Sử dụng key phù hợp từ phản hồi API
-                name: product.nameProduct,
-                price: product.priceProduct,
-                category_id: 2 
-              }));
-        
-              // Cập nhật state với dữ liệu mới
-              setInfo2(updatedProducts);
-            } else {
-              console.log('No products found');
-            }
-          })
-          .catch(error => {
-            console.error('Error fetching products:', error);
-          });
-      }, []); // [] đảm bảo useEffect chỉ chạy một lần khi component được mount
+ 
 
       const [info3, setInfo3] = useState([
         {
@@ -121,6 +52,230 @@ function HomePageCottonUSA() {
           });
       }, []);
 
+      const [info1, setInfo1] = useState([
+        {
+          imgUrl1: "https://cottonusa.co/cdn/shop/files/1_6.jpg?v=1696431420&width=800",
+          name: "MLB Los Angeles Dodgers Logo Red T-Shirt",
+          price: "119.000",
+          id:1
+        },
+      ]);
+    
+      // Sử dụng useEffect để fetch dữ liệu khi component được render
+      useEffect(() => {
+        fetch("http://localhost:80/api/products")
+          .then((response) => response.json()) // Convert response to JSON
+          .then((data) => {
+            console.log(data); // Log the received data for debugging
+    
+            // Kiểm tra xem dữ liệu có phải là một mảng và không rỗng
+            if (Array.isArray(data) && data.length > 0) {
+              // Lọc các sản phẩm có category_id = 3
+              const filteredProducts = data.filter(
+                (product) => product.category_id === "1"
+              );
+              console.log(filteredProducts)
+
+              const topFiveProducts = filteredProducts.slice(0, 5);
+
+              // Chuyển đổi dữ liệu đã lọc sang cấu trúc của info1
+              const updatedProducts = topFiveProducts.map((product) => ({
+                imgUrl1: product.img_product, // Sử dụng key phù hợp từ phản hồi API
+                name: product.nameProduct,
+                price: product.priceProduct,
+                id:product.id
+              }));
+    
+              // Cập nhật state với dữ liệu mới
+              setInfo1(updatedProducts);
+            } else {
+              console.log("No products found");
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching products:", error);
+          });
+      }, []);
+
+      const [info2, setInfo2] = useState([
+        {
+          imgUrl1: "https://cottonusa.co/cdn/shop/files/1_6.jpg?v=1696431420&width=800",
+          name: "MLB Los Angeles Dodgers Logo Red T-Shirt",
+          price: "119.000",
+        },
+      ]);
+    
+      // Sử dụng useEffect để fetch dữ liệu khi component được render
+      useEffect(() => {
+        fetch("http://localhost:80/api/products")
+          .then((response) => response.json()) // Convert response to JSON
+          .then((data) => {
+            console.log(data); // Log the received data for debugging
+    
+            // Kiểm tra xem dữ liệu có phải là một mảng và không rỗng
+            if (Array.isArray(data) && data.length > 0) {
+              // Lọc các sản phẩm có category_id = 3
+              const filteredProducts = data.filter(
+                (product) => product.category_id === "2"
+              );
+              console.log(filteredProducts)
+
+              const topFiveProducts = filteredProducts.slice(0, 5);
+
+              // Chuyển đổi dữ liệu đã lọc sang cấu trúc của info1
+              const updatedProducts = topFiveProducts.map((product) => ({
+                imgUrl1: product.img_product, // Sử dụng key phù hợp từ phản hồi API
+                name: product.nameProduct,
+                price: product.priceProduct,
+              }));
+    
+              // Cập nhật state với dữ liệu mới
+              setInfo2(updatedProducts);
+            } else {
+              console.log("No products found");
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching products:", error);
+          });
+      }, []);
+
+
+      const [info4, setInfo4] = useState([
+        {
+          imgUrl1: "https://cottonusa.co/cdn/shop/files/1_6.jpg?v=1696431420&width=800",
+          name: "MLB Los Angeles Dodgers Logo Red T-Shirt",
+          price: "119.000",
+        },
+      ]);
+    
+      // Sử dụng useEffect để fetch dữ liệu khi component được render
+      useEffect(() => {
+        fetch("http://localhost:80/api/products")
+          .then((response) => response.json()) // Convert response to JSON
+          .then((data) => {
+            console.log(data); // Log the received data for debugging
+    
+            // Kiểm tra xem dữ liệu có phải là một mảng và không rỗng
+            if (Array.isArray(data) && data.length > 0) {
+              // Lọc các sản phẩm có category_id = 3
+              const filteredProducts = data.filter(
+                (product) => product.category_id === "4"
+              );
+              console.log(filteredProducts)
+
+              const topFiveProducts = filteredProducts.slice(0, 5);
+
+              // Chuyển đổi dữ liệu đã lọc sang cấu trúc của info1
+              const updatedProducts = topFiveProducts.map((product) => ({
+                imgUrl1: product.img_product, // Sử dụng key phù hợp từ phản hồi API
+                name: product.nameProduct,
+                price: product.priceProduct,
+              }));
+    
+              // Cập nhật state với dữ liệu mới
+              setInfo4(updatedProducts);
+            } else {
+              console.log("No products found");
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching products:", error);
+          });
+      }, []);
+
+      const [info5, setInfo5] = useState([
+        {
+          imgUrl1: "https://cottonusa.co/cdn/shop/files/1_6.jpg?v=1696431420&width=800",
+          name: "MLB Los Angeles Dodgers Logo Red T-Shirt",
+          price: "119.000",
+          id:3,
+        },
+      ]);
+    
+      // Sử dụng useEffect để fetch dữ liệu khi component được render
+      useEffect(() => {
+        fetch("http://localhost:80/api/products")
+          .then((response) => response.json()) // Convert response to JSON
+          .then((data) => {
+            console.log(data); // Log the received data for debugging
+    
+            // Kiểm tra xem dữ liệu có phải là một mảng và không rỗng
+            if (Array.isArray(data) && data.length > 0) {
+              // Lọc các sản phẩm có category_id = 3
+              const filteredProducts = data.filter(
+                (product) => product.category_id === "5"
+              );
+              console.log(filteredProducts)
+
+              const topFiveProducts = filteredProducts.slice(0, 5);
+
+              // Chuyển đổi dữ liệu đã lọc sang cấu trúc của info1
+              const updatedProducts = topFiveProducts.map((product) => ({
+                imgUrl1: product.img_product, // Sử dụng key phù hợp từ phản hồi API
+                name: product.nameProduct,
+                price: product.priceProduct,
+                id:product.id
+              }));
+    
+              // Cập nhật state với dữ liệu mới
+              setInfo5(updatedProducts);
+            } else {
+              console.log("No products found");
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching products:", error);
+          });
+      }, []);
+
+
+      const [info6, setInfo6] = useState([
+        {
+          imgUrl1: "https://cottonusa.co/cdn/shop/files/1_6.jpg?v=1696431420&width=800",
+          name: "MLB Los Angeles Dodgers Logo Red T-Shirt",
+          price: "119.000",
+        
+        },
+      ]);
+    
+      // Sử dụng useEffect để fetch dữ liệu khi component được render
+      useEffect(() => {
+        fetch("http://localhost:80/api/products")
+          .then((response) => response.json()) // Convert response to JSON
+          .then((data) => {
+            console.log(data); // Log the received data for debugging
+    
+            // Kiểm tra xem dữ liệu có phải là một mảng và không rỗng
+            if (Array.isArray(data) && data.length > 0) {
+              // Lọc các sản phẩm có category_id = 3
+              const filteredProducts = data.filter(
+                (product) => product.category_id === "3"
+              );
+              console.log(filteredProducts)
+
+              const topFiveProducts = filteredProducts.slice(0, 5);
+
+              // Chuyển đổi dữ liệu đã lọc sang cấu trúc của info1
+              const updatedProducts = topFiveProducts.map((product) => ({
+                imgUrl1: product.img_product, // Sử dụng key phù hợp từ phản hồi API
+                name: product.nameProduct,
+                price: product.priceProduct,
+              }));
+    
+              // Cập nhật state với dữ liệu mới
+              setInfo6(updatedProducts);
+            } else {
+              console.log("No products found");
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching products:", error);
+          });
+      }, []);
+
+
+
     return (
         <div>
             <div className="HeaderOnHomePageCottonUSA">
@@ -135,7 +290,8 @@ function HomePageCottonUSA() {
                         MLB T-SHIRT
                     </h1>
                     <div className="itermPrdHomePageCottonUSA">
-                        <ProductCottonUSAInHomePage InformationPrd={info3} />
+                        <ProductCottonUSAInHomePage InformationPrd={info1} />
+                     
                     </div>
                 </div>
                 <div>
@@ -143,7 +299,7 @@ function HomePageCottonUSA() {
                         NBA T-Shirts
                     </h1>
                     <div className="itermPrdHomePageCottonUSA">
-                        <ProductCottonUSAInHomePage InformationPrd={info3}></ProductCottonUSAInHomePage>
+                        <ProductCottonUSAInHomePage InformationPrd={info2}></ProductCottonUSAInHomePage>
                     </div>
                    
                 </div>
@@ -161,10 +317,10 @@ function HomePageCottonUSA() {
                         Khói Collection
                     </h1>
                     <div className="itermPrdHomePageCottonUSA">
-                        <ProductCottonUSAInHomePage InformationPrd={info3}></ProductCottonUSAInHomePage>
+                        <ProductCottonUSAInHomePage InformationPrd={info4}></ProductCottonUSAInHomePage>
                     </div>
                     <div className="itermPrdHomePageCottonUSA">
-                        <ProductCottonUSAInHomePage InformationPrd={info3}></ProductCottonUSAInHomePage>
+                        <ProductCottonUSAInHomePage InformationPrd={info5}></ProductCottonUSAInHomePage>
                     </div>
                 </div>
             </div>

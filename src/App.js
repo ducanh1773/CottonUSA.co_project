@@ -34,7 +34,8 @@ function App() {
         <Route path='/Điều-khoản-và-dịch-vụ' element={<PolicyAndService></PolicyAndService>}></Route>
         <Route path='/chinh-sach-bảo-mật' element={<SecurityPrivate></SecurityPrivate>}></Route>
         <Route path='/contact' element={<ContactPageUSA></ContactPageUSA>}></Route>
-        <Route path='/products'element={<ProductDetailCottonUSA></ProductDetailCottonUSA>}></Route>
+        <Route path='/products/:id'element={<ProductDetailCottonUSA></ProductDetailCottonUSA>}></Route>
+        
       
       </Routes>
     </div>
