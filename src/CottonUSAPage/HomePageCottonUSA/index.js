@@ -14,6 +14,7 @@ function HomePageCottonUSA() {
           imgUrl1: "https://cottonusa.co/cdn/shop/files/1_6.jpg?v=1696431420&width=800",
           name: "MLB Los Angeles Dodgers Logo Red T-Shirt",
           price: "119.000",
+          id:1
         },
       ]);
     
@@ -39,6 +40,7 @@ function HomePageCottonUSA() {
                 imgUrl1: product.img_product, // Sử dụng key phù hợp từ phản hồi API
                 name: product.nameProduct,
                 price: product.priceProduct,
+                id:product.id
               }));
     
               // Cập nhật state với dữ liệu mới
@@ -102,6 +104,7 @@ function HomePageCottonUSA() {
           imgUrl1: "https://cottonusa.co/cdn/shop/files/1_6.jpg?v=1696431420&width=800",
           name: "MLB Los Angeles Dodgers Logo Red T-Shirt",
           price: "119.000",
+          id:2
         },
       ]);
     
@@ -127,6 +130,7 @@ function HomePageCottonUSA() {
                 imgUrl1: product.img_product, // Sử dụng key phù hợp từ phản hồi API
                 name: product.nameProduct,
                 price: product.priceProduct,
+                id:product.id
               }));
     
               // Cập nhật state với dữ liệu mới
@@ -146,6 +150,7 @@ function HomePageCottonUSA() {
           imgUrl1: "https://cottonusa.co/cdn/shop/files/1_6.jpg?v=1696431420&width=800",
           name: "MLB Los Angeles Dodgers Logo Red T-Shirt",
           price: "119.000",
+          id:1
         },
       ]);
     
@@ -171,6 +176,7 @@ function HomePageCottonUSA() {
                 imgUrl1: product.img_product, // Sử dụng key phù hợp từ phản hồi API
                 name: product.nameProduct,
                 price: product.priceProduct,
+                id:product.id
               }));
     
               // Cập nhật state với dữ liệu mới
@@ -261,6 +267,7 @@ function HomePageCottonUSA() {
                 imgUrl1: product.img_product, // Sử dụng key phù hợp từ phản hồi API
                 name: product.nameProduct,
                 price: product.priceProduct,
+                id:product.id
               }));
     
               // Cập nhật state với dữ liệu mới

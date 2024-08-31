@@ -13,6 +13,7 @@ import PolicyAndService from './CottonUSAPage/PolIcyAndService';
 import SecurityPrivate from './CottonUSAPage/SecurityPrivate';
 import ContactPageUSA from './CottonUSAPage/ContactPageCottonUSA';
 import ProductDetailCottonUSA from './CottonUSAProductDetail';
+import ShoppingCart from './CottonUSAPage/ShoppingCart';
 import {
   QueryClient,
   QueryClientProvider,
@@ -35,6 +36,7 @@ function App() {
         <Route path='/chinh-sach-bảo-mật' element={<SecurityPrivate></SecurityPrivate>}></Route>
         <Route path='/contact' element={<ContactPageUSA></ContactPageUSA>}></Route>
         <Route path='/products/:id'element={<ProductDetailCottonUSA></ProductDetailCottonUSA>}></Route>
+        <Route path='/shopping_cart' element={<ShoppingCart></ShoppingCart>}></Route>
         
       
       </Routes>

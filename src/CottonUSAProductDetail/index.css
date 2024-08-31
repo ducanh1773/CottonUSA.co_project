@@ -50,6 +50,11 @@
 .OptionColor {
     font-size: 18px;
     display: flex;
+
+}
+.OptionColor p{
+    margin-right: 10px;
+
 }
 
 .OptionItermColor {
@@ -89,6 +94,7 @@
 .borderQuantityBuyProduct {
     border: 1px solid black;
     width: 30%;
+    display: flex;
 
 }
 
@@ -162,4 +168,16 @@
 
 .moreItermOnProductDetail  h1{
     font-size: 60px;
+}
+
+.OptionItemColor{
+    display: flex;
+}
+
+.sizeProduct{
+    width: 25px;
+    display: flex;
+    justify-content: center;
+    margin-right: 20px;
+
 }

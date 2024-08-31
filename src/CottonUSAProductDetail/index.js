@@ -17,7 +17,20 @@ function ProductDetailCottonUSA() {
   const [showShip, setShowShip] = useState(false);
   const [returnProduct, setReturnProduct] = useState(false);
   const [product, setProduct] = useState(null); // Trạng thái để lưu sản phẩm chi tiết
+  const [selectedColor, setSelectedColor] = useState('');
 
+  // Hàm để xử lý khi nhấp vào màu
+  const handleColorClick = (color) => {
+    setSelectedColor(color);
+    
+  };
+
+  const [selectedSize, setSelectedSize] = useState('');
+
+  // Hàm để xử lý khi nhấp vào size
+  const handleSizeClick = (size) => {
+    setSelectedSize(size);
+  };
  console.log(id);
   useEffect(() => {
     fetch(`http://localhost:80/api/products/findProduct/${id}`)
@@ -98,20 +111,72 @@ function ProductDetailCottonUSA() {
           </div>
           <div className="OptionColor">
             <p>Màu:</p>
-            <p>Trắng</p>
+            <p>{selectedColor}</p>
           </div>
-          <div className="OptionItermColor">
-            <p>Đen</p>
-            <p>Trắng</p>
-          </div>
+          <div className="OptionItemColor">
+         <p
+          onClick={() => handleColorClick('Đen')}
+          style={{
+          border: selectedColor === 'Đen' ? '3px solid black ' : '1px solid black',
+          padding: '10px',
+          cursor: 'pointer',
+          marginRight :'20px',
+
+        }}
+        >
+        Đen
+        </p>
+       <p
+        onClick={() => handleColorClick('Trắng')}
+        style={{
+          border: selectedColor === 'Trắng' ? '3px solid black' : '1px solid black',
+          padding: '10px',
+          cursor: 'pointer'
+        }}
+         >
+        Trắng
+      </p>
+    </div> 
           <div className="OptionColor">
-            <p>Cỡ:XL</p>
+            <p>Cỡ:  </p>
+            <p> {selectedSize}</p>
           </div>
-          <div className="OptionItermColor">
-            <p>M</p>
-            <p>L</p>
-            <p>XL</p>
-          </div>
+           <div className="OptionItemColor">
+      <p 
+        onClick={() => handleSizeClick('M')}
+        style={{
+          border: selectedSize === 'M' ? '3px solid black' : '1px solid black',
+          padding: '10px',
+          cursor: 'pointer',
+          fontWeight: selectedSize === 'M'  ? '800' : '200',
+        }}
+       className="sizeProduct">
+        M
+      </p>
+      <p
+        onClick={() => handleSizeClick('L')}
+        style={{
+          border: selectedSize === 'L' ? '3px solid black' : '1px solid black',
+          padding: '10px',
+          fontWeight: selectedSize === 'L'  ? '800' : '200',
+          cursor: 'pointer',
+        }}
+        className="sizeProduct">
+        L
+      </p>
+      <p
+        onClick={() => handleSizeClick('XL')}
+        style={{
+          border: selectedSize === 'XL' ? '3px solid black' : '1px solid black',
+          fontWeight: selectedSize === 'XL'  ? '800' : '200',
+          padding: '10px',
+          cursor: 'pointer',
+          
+        }}
+        className="sizeProduct">
+        XL
+      </p>
+    </div>
           <div className="OptionColor">
             <p>Số lượng :</p>
           </div>

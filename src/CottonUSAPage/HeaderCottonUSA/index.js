@@ -39,7 +39,7 @@ function HeaderCottonUSA() {
                 <div className="iconHeaderCottonUSA">
                     <box-icon name='search-alt-2'></box-icon>
                     <Link to="/dangnhapCottonUSA"><box-icon name='user' ></box-icon></Link>
-                    <box-icon name='cart' ></box-icon>
+                    <Link to='/shopping_cart'><box-icon name='cart' ></box-icon></Link>
                 </div>
             </div>
             {showIterm &&
