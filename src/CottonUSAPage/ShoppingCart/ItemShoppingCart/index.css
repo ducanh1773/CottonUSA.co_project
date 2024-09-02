@@ -5,7 +5,7 @@
 
 .oneItermPrdOfItemObjectShoppingCart{
     display: flex;
-    width: 300px;
+    width:800px;
 }
 
 .imgOfShoppingCart img{
@@ -13,16 +13,16 @@
 }
 
 .numberPrdOfItemObjectShoppingCart{
-    margin-left: 30%;
+
 }
 
 .mainRightOfOneItermPrdOfItemObjectShoppingCart{
-    width: 150px;
+    width: 400px;
 }
 
 .numberPrdOfItemObjectShoppingCart{
     width: 300px;
-    margin-left: 35%;
+    margin-left: 22%;
     margin-right: 10%;
     display: grid;
     justify-content: center;
