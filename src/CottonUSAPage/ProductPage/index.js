@@ -4,8 +4,11 @@ import EndPageCottonUSA from "../endPage";
 import "./index.css"
 import ProductCottonUSAInHomePage from "../HomePageCottonUSA/ProductInHomePage"
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 function ProductPage() {
     const info1 = [{ imgUrl1: "https://cottonusa.co/cdn/shop/files/1_6.jpg?v=1696431420&width=800", name: "MLB Los Angeles Dodgers Logo Red T-Shirt", price: '119.000' }]
+    
     return (
         <div>
             <div className="headerOnAboutUSPage">

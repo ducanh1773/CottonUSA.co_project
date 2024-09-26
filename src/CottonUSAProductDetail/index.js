@@ -9,8 +9,9 @@ import "@splidejs/splide/css/sea-green";
 import "react-image-gallery/styles/css/image-gallery.css";
 import { Link, useParams } from "react-router-dom";
 import ProductCottonUSAInHomePage from "../CottonUSAPage/HomePageCottonUSA/ProductInHomePage";
-
+import axios from "axios";
 function ProductDetailCottonUSA() {
+  
   const { id } = useParams(); // Lấy ID sản phẩm từ URL
   const [value, setValue] = useState(1);
   const [showPrevervs, setShowPrevevs] = useState(false);
@@ -19,6 +20,22 @@ function ProductDetailCottonUSA() {
   const [product, setProduct] = useState(null); // Trạng thái để lưu sản phẩm chi tiết
   const [selectedColor, setSelectedColor] = useState('');
 
+  const [cart, setCart] = useState([]);
+
+  const addToCart = async (productId, quantity, price) => {
+    try {
+      const response = await axios.post(`http://localhost:8080/cart/1/add`, { // 123 là customerId
+        productId: productId,
+        quantity: quantity,
+        price: price
+      });
+      setCart(response.data);
+      alert("Product added to cart successfully!");
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      alert("Failed to add product to cart.");
+    }
+  };
   // Hàm để xử lý khi nhấp vào màu
   const handleColorClick = (color) => {
     setSelectedColor(color);
@@ -86,6 +103,7 @@ function ProductDetailCottonUSA() {
     },
     // Thêm nhiều hình ảnh hơn nếu cần
   ];
+
 
   return (
     <div>
@@ -188,7 +206,7 @@ function ProductDetailCottonUSA() {
             </div>
           </div>
           <div className="buttonToShoppingCart">
-            <button>Thêm vào giỏ hàng</button>
+            <button onClick={() => addToCart(1,2,50000)}>Thêm vào giỏ hàng</button>
           </div>
           <div className="introduceProductDetail">
             <p>Product ID: DN036MUN</p>

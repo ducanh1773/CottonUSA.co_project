@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./index.css";
 import { Link } from "react-router-dom";
 import { InformationPrd } from "../../cottonUSAReuse";
+
 function ItemShoppingCart(props) {
   const [value, setValue] = useState(1); // Default value set to 1
   const [sumPrice, setSumPrice] = useState(119000); // Initial sumPrice
@@ -11,10 +12,11 @@ function ItemShoppingCart(props) {
     setValue(newValue);
 
     // Recalculate the sum price when value changes
-    setSumPrice(newValue * price);
+    setSumPrice(newValue * price);                                                                                                                                                                                                                                                                                                                                       
   };
 
   const  handleClickDeletePrd = () =>{
+    
     setShowPrd(false);
   }
 
