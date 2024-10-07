@@ -19,15 +19,18 @@ function ProductDetailCottonUSA() {
   const [returnProduct, setReturnProduct] = useState(false);
   const [product, setProduct] = useState(null); // Trạng thái để lưu sản phẩm chi tiết
   const [selectedColor, setSelectedColor] = useState('');
-
+  const [availableColors, setAvailableColors] = useState([]);
   const [cart, setCart] = useState([]);
-
-  const addToCart = async (productId, quantity, price) => {
+  const [availableSize, setAvailableSize] = useState([]);
+  const addToCart = async () => {
     try {
-      const response = await axios.post(`http://localhost:8080/cart/1/add`, { // 123 là customerId
-        productId: productId,
-        quantity: quantity,
-        price: price
+      const response = await axios.post(`http://localhost:80/api/cart/1/add/${id}?quantity=${value}`, { // Replace 1 with dynamic customerId
+        productId: id,
+        quantity: value, // Use value state for quantity
+        selectedColor: selectedColor,
+        selectedSize: selectedSize,
+        
+        
       });
       setCart(response.data);
       alert("Product added to cart successfully!");
@@ -36,6 +39,7 @@ function ProductDetailCottonUSA() {
       alert("Failed to add product to cart.");
     }
   };
+  
   // Hàm để xử lý khi nhấp vào màu
   const handleColorClick = (color) => {
     setSelectedColor(color);
@@ -59,8 +63,16 @@ function ProductDetailCottonUSA() {
             imgUrl1: data.img_product,
             name: data.nameProduct,
             price: data.priceProduct,
-            description: "Chất liệu: 100% Cotton", // Bạn có thể tùy chỉnh theo dữ liệu thực tế
+            description: "Chất liệu: 100% Cotton", 
+            skus: data.skus, 
+          
+
           });
+          const colors = data.skus.map((sku) => sku.color_attribute_id);
+          setAvailableColors([...new Set(colors)]);
+
+          const sizes = data.skus.map((sku) => sku.size_attribute_id);
+          setAvailableSize([...new Set(sizes)]);
         } else {
           console.log("Product not found");
         }
@@ -131,70 +143,51 @@ function ProductDetailCottonUSA() {
             <p>Màu:</p>
             <p>{selectedColor}</p>
           </div>
-          <div className="OptionItemColor">
-         <p
-          onClick={() => handleColorClick('Đen')}
-          style={{
-          border: selectedColor === 'Đen' ? '3px solid black ' : '1px solid black',
-          padding: '10px',
-          cursor: 'pointer',
-          marginRight :'20px',
 
-        }}
-        >
-        Đen
-        </p>
-       <p
-        onClick={() => handleColorClick('Trắng')}
-        style={{
-          border: selectedColor === 'Trắng' ? '3px solid black' : '1px solid black',
-          padding: '10px',
-          cursor: 'pointer'
-        }}
-         >
-        Trắng
-      </p>
-    </div> 
+          <div className="OptionItemColor">
+            {/* Hiển thị danh sách các màu */}
+            {availableColors.map((color) => (
+              <p
+                key={color}
+                onClick={() => handleColorClick(color)}
+                style={{
+                  border:
+                    selectedColor === color
+                      ? "3px solid black"
+                      : "1px solid black",
+                  padding: "10px",
+                  cursor: "pointer",
+                  marginRight: "20px"
+                }}
+              >
+                {color}
+              </p>
+            ))}
+          </div>
+
           <div className="OptionColor">
-            <p>Cỡ:  </p>
+            <p>Cỡ: </p>
             <p> {selectedSize}</p>
           </div>
-           <div className="OptionItemColor">
-      <p 
-        onClick={() => handleSizeClick('M')}
-        style={{
-          border: selectedSize === 'M' ? '3px solid black' : '1px solid black',
-          padding: '10px',
-          cursor: 'pointer',
-          fontWeight: selectedSize === 'M'  ? '800' : '200',
-        }}
-       className="sizeProduct">
-        M
-      </p>
-      <p
-        onClick={() => handleSizeClick('L')}
-        style={{
-          border: selectedSize === 'L' ? '3px solid black' : '1px solid black',
-          padding: '10px',
-          fontWeight: selectedSize === 'L'  ? '800' : '200',
-          cursor: 'pointer',
-        }}
-        className="sizeProduct">
-        L
-      </p>
-      <p
-        onClick={() => handleSizeClick('XL')}
-        style={{
-          border: selectedSize === 'XL' ? '3px solid black' : '1px solid black',
-          fontWeight: selectedSize === 'XL'  ? '800' : '200',
-          padding: '10px',
-          cursor: 'pointer',
-          
-        }}
-        className="sizeProduct">
-        XL
-      </p>
-    </div>
+          <div className="OptionItemColor">
+          {availableSize.map((sizes) => (
+              <p
+                key={sizes}
+                onClick={() => handleSizeClick(sizes)}
+                style={{
+                  border:
+                    selectedColor === sizes
+                      ? "3px solid black"
+                      : "1px solid black",
+                  padding: "10px",
+                  cursor: "pointer",
+                  marginRight: "20px"
+                }}
+              >
+                {sizes}
+              </p>
+            ))}
+          </div>
           <div className="OptionColor">
             <p>Số lượng :</p>
           </div>
@@ -206,7 +199,9 @@ function ProductDetailCottonUSA() {
             </div>
           </div>
           <div className="buttonToShoppingCart">
-            <button onClick={() => addToCart(1,2,50000)}>Thêm vào giỏ hàng</button>
+            <button onClick={() => addToCart(1, 2, 50000)}>
+              Thêm vào giỏ hàng
+            </button>
           </div>
           <div className="introduceProductDetail">
             <p>Product ID: DN036MUN</p>
@@ -214,18 +209,31 @@ function ProductDetailCottonUSA() {
             <p>Kiểu dáng áo T-shirt phom rộng thoải mái, năng động</p>
             <p>Thiết kế lấy cảm hứng từ hiệp hội bóng chày MLB</p>
             <p>Chất vải mềm mịn và thấm hút tốt</p>
-            <p>Gam màu hiện đại dễ dàng phối với nhiều trang phục và phụ kiện</p>
+            <p>
+              Gam màu hiện đại dễ dàng phối với nhiều trang phục và phụ kiện
+            </p>
           </div>
           <div>
-            <div className="itermPolicyProduct" onClick={handleClickToshowPrevers}>
+            <div
+              className="itermPolicyProduct"
+              onClick={handleClickToshowPrevers}
+            >
               <div className="policyProduct">
                 <h4>Bảo quản</h4>
-                <box-icon name="down-arrow-circle" type="solid" flip="horizontal" color="#c5c5c5"></box-icon>
+                <box-icon
+                  name="down-arrow-circle"
+                  type="solid"
+                  flip="horizontal"
+                  color="#c5c5c5"
+                ></box-icon>
               </div>
               {showPrevervs && (
                 <div className="informationProduct">
                   <p>
-                    Để bảo quản sản phẩm đúng cách, luôn mới và bền đẹp thì bạn nên giặt ở nhiệt độ thấp, sử dụng các chế độ vắt nhẹ nhàng sẽ có lợi hơn cho sản phẩm, giúp duy trì màu sắc, hình dạng và cấu trúc của vải.
+                    Để bảo quản sản phẩm đúng cách, luôn mới và bền đẹp thì bạn
+                    nên giặt ở nhiệt độ thấp, sử dụng các chế độ vắt nhẹ nhàng
+                    sẽ có lợi hơn cho sản phẩm, giúp duy trì màu sắc, hình dạng
+                    và cấu trúc của vải.
                   </p>
                   <li>Không sử dụng nước tẩy / thuốc tẩy</li>
                   <li>Lộn trái sản phẩm khi giặt và phơi</li>
@@ -236,7 +244,12 @@ function ProductDetailCottonUSA() {
             <div className="itermPolicyProduct" onClick={hadlecClickToshowShip}>
               <div className="policyProduct">
                 <h4>Chính sách giao hàng</h4>
-                <box-icon name="down-arrow-circle" type="solid" flip="horizontal" color="#c5c5c5"></box-icon>
+                <box-icon
+                  name="down-arrow-circle"
+                  type="solid"
+                  flip="horizontal"
+                  color="#c5c5c5"
+                ></box-icon>
               </div>
               {showShip && (
                 <div className="informationProduct">
@@ -244,19 +257,32 @@ function ProductDetailCottonUSA() {
                 </div>
               )}
             </div>
-            <div className="itermPolicyProduct" onClick={handlecClickToShowReturnProduct}>
+            <div
+              className="itermPolicyProduct"
+              onClick={handlecClickToShowReturnProduct}
+            >
               <div className="policyProduct">
                 <h4>Chính sách đổi trả</h4>
-                <box-icon name="down-arrow-circle" type="solid" flip="horizontal" color="#c5c5c5"></box-icon>
+                <box-icon
+                  name="down-arrow-circle"
+                  type="solid"
+                  flip="horizontal"
+                  color="#c5c5c5"
+                ></box-icon>
               </div>
               {returnProduct && (
                 <div>
                   <p>
-                    Nhằm mang lại cho bạn sự tiện lợi và những trải nghiệm tuyệt vời khi mua hàng, chúng tôi đã phát triển dịch vụ đổi hàng tận nơi và chính sách bảo hành.
+                    Nhằm mang lại cho bạn sự tiện lợi và những trải nghiệm tuyệt
+                    vời khi mua hàng, chúng tôi đã phát triển dịch vụ đổi hàng
+                    tận nơi và chính sách bảo hành.
                   </p>
                   <p>
                     Tham khảo thêm thông tin về chính sách{" "}
-                    <Link to="/Chinh-sach-doi-tra-va-bao-hanh" className="PreversItermLink">
+                    <Link
+                      to="/Chinh-sach-doi-tra-va-bao-hanh"
+                      className="PreversItermLink"
+                    >
                       tại đây
                     </Link>
                   </p>
@@ -271,7 +297,9 @@ function ProductDetailCottonUSA() {
           <h1>Có thể bạn sẽ thích</h1>
         </div>
         <div className="itermPrdHomePageCottonUSA">
-          <ProductCottonUSAInHomePage InformationPrd={[product]}></ProductCottonUSAInHomePage>
+          <ProductCottonUSAInHomePage
+            InformationPrd={[product]}
+          ></ProductCottonUSAInHomePage>
         </div>
       </div>
       <div className="moreItermOnProductDetail">
@@ -279,7 +307,9 @@ function ProductDetailCottonUSA() {
           <h1>Sản phẩm đã xem gần đây</h1>
         </div>
         <div className="itermPrdHomePageCottonUSA">
-          <ProductCottonUSAInHomePage InformationPrd={[product]}></ProductCottonUSAInHomePage>
+          <ProductCottonUSAInHomePage
+            InformationPrd={[product]}
+          ></ProductCottonUSAInHomePage>
         </div>
       </div>
       <EndPageCottonUSA />

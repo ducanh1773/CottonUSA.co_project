@@ -7,17 +7,15 @@ import ItemShoppingCart from "./ItemShoppingCart/index";
 function ShoppingCart({ customerId }) {
   const [cartInfo, setCartInfo] = useState(null);
   const [error, setError] = useState(null);
-    const[product , setProduct] = useState();
+  const[product , setProduct] = useState();
   const [info6, setInfo6] = useState([
     {
-      imgUrl1: "https://cottonusa.co/cdn/shop/files/1_6.jpg?v=1696431420&width=800",
+      imgUrl1:
+        "https://cottonusa.co/cdn/shop/files/1_6.jpg?v=1696431420&width=800",
       name: "MLB Los Angeles Dodgers Logo Red T-Shirt",
       price: "119.000",
-      size:"XL"
-    
-    },
-
-  
+      size: "XL"
+    }
   ]);
   useEffect(() => {
     const fetchCartInfo = async () => {
@@ -35,26 +33,43 @@ function ShoppingCart({ customerId }) {
 
   console.log(cartInfo);
 
+  // useEffect(() => {
+  //   fetch(`http://localhost:80/api/products/findProduct/${cartInfo}`)
+  //     .then((response) => response.json()) // Convert response to JSON
+  //     .then((data) => {
+  //       console.log(data); // Debug log
+  //       if (data) {
+  //           setInfo6({
+  //             imgUrl1: data.img_product,
+  //             name: data.nameProduct,
+  //             price: data.priceProduct,
+  //             description: "Chất liệu: 100% Cotton" // Bạn có thể tùy chỉnh theo dữ liệu thực tế
+  //           });
+  //       } else {
+  //         console.log("Product not found");
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching product:", error);
+  //     });
+  // }, [cartInfo]);
+
+  const [cartItems, setCartItems] = useState([]);
+
   useEffect(() => {
-    fetch(`http://localhost:80/api/products/findProduct/${cartInfo}`)
-      .then((response) => response.json()) // Convert response to JSON
-      .then((data) => {
-        console.log(data); // Debug log
-        if (data) {
-            setInfo6({
-              imgUrl1: data.img_product,
-              name: data.nameProduct,
-              price: data.priceProduct,
-              description: "Chất liệu: 100% Cotton" // Bạn có thể tùy chỉnh theo dữ liệu thực tế
-            });
-        } else {
-          console.log("Product not found");
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching product:", error);
-      });
-  }, [cartInfo]);
+    const fetchCartItems = async () => {
+      try {
+        const response = await axios.get("http://localhost:80/api/cart/1/items"); // Replace 1 with dynamic cart ID
+        setCartItems(response.data);
+      } catch (error) {
+        console.error("Error fetching cart items:", error);
+      }
+    };
+
+    fetchCartItems();
+  }, []);
+
+  console.log(cartItems);
 
 
 
@@ -78,7 +93,7 @@ function ShoppingCart({ customerId }) {
             <h4>Tổng cộng</h4>
           </div>
           <div>
-            <ItemShoppingCart InformationPrd={[info6]} />
+            <ItemShoppingCart InformationPrd={info6} />
             
           </div>
         </div>
