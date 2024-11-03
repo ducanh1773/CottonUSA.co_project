@@ -5,46 +5,64 @@ import HeaderCottonUSA from "../HeaderCottonUSA";
 import ItemShoppingCart from "./ItemShoppingCart/index";
 
 function ShoppingCart({ customerId }) {
-  const [cartInfo, setCartInfo] = useState(null);
+  const [cartInfo, setCartInfo] = useState(null); // Chứa thông tin giỏ hàng
   const [error, setError] = useState(null);
-  const[product , setProduct] = useState();
-  const [info6, setInfo6] = useState([
-    {
-      imgUrl1:
-        "https://cottonusa.co/cdn/shop/files/1_6.jpg?v=1696431420&width=800",
-      name: "MLB Los Angeles Dodgers Logo Red T-Shirt",
-      price: "119.000",
-      size: "XL"
-    }
-  ]);
+  const [cartItems, setCartItems] = useState([]); // Chứa danh sách sản phẩm chi tiết
+  const { id } = 12;
+  const [productIds, setProductIds] = useState({});
+  const [products, setProducts] = useState([]);
+  // useEffect(() => {
+  //  //  Lấy thông tin giỏ hàng dựa trên ID khách hàng
+  //   const fetchCartInfo = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `http://localhost:80/api/cart/1/product-ids`
+  //       );
+  //       setCartInfo(response.data);
+  //     } catch (err) {
+  //       setError("Không thể lấy thông tin giỏ hàng.");
+  //       console.error(err);
+  //     }
+  //   };
+
+  //   fetchCartInfo();
+  // }, [customerId]);
+
   useEffect(() => {
-    const fetchCartInfo = async () => {
+    const fetchProductIds = async (cartId) => {
       try {
-        const response = await axios.get("http://localhost:80/api/cart/1/product-ids");
-        setCartInfo(response.data);
-      } catch (err) {
-        setError("Could not fetch cart details for this customer.");
-        console.error(err);
+        const response = await axios.get(
+          `http://localhost:80/api/cart/${cartId}/product-ids`
+        );
+        setProductIds(response.data);
+
+        console.log("Product IDs:", productIds);
+      } catch (error) {
+        console.error("Error fetching product IDs:", error);
       }
     };
 
-    fetchCartInfo();
-  }, [customerId]);
+    // Example cartId to be replaced by dynamic data
+    const cartId = 1;
+    fetchProductIds(cartId);
+  }, []);
 
-  console.log(cartInfo);
+  console.log(productIds);
 
   // useEffect(() => {
-  //   fetch(`http://localhost:80/api/products/findProduct/${cartInfo}`)
+  //   fetch(`http://localhost:80/api/products/findProduct/1`)
   //     .then((response) => response.json()) // Convert response to JSON
   //     .then((data) => {
   //       console.log(data); // Debug log
   //       if (data) {
-  //           setInfo6({
-  //             imgUrl1: data.img_product,
-  //             name: data.nameProduct,
-  //             price: data.priceProduct,
-  //             description: "Chất liệu: 100% Cotton" // Bạn có thể tùy chỉnh theo dữ liệu thực tế
-  //           });
+  //         setProduct({
+  //           imgUrl1: data.img_product,
+  //           name: data.nameProduct,
+  //           price: data.priceProduct,
+  //           description: "Chất liệu: 100% Cotton",
+  //           skus: data.skus
+  //         });
+  //         console.log(product);
   //       } else {
   //         console.log("Product not found");
   //       }
@@ -52,32 +70,31 @@ function ShoppingCart({ customerId }) {
   //     .catch((error) => {
   //       console.error("Error fetching product:", error);
   //     });
-  // }, [cartInfo]);
-
-  const [cartItems, setCartItems] = useState([]);
+  // }, [id]);
 
   useEffect(() => {
-    const fetchCartItems = async () => {
+    const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:80/api/cart/1/items"); // Replace 1 with dynamic cart ID
-        setCartItems(response.data);
+        const productPromises = productIds.map((id) =>
+          fetch(`http://localhost:80/api/products/findProduct/${id}`).then(
+            (response) => response.json()
+          )
+        );
+
+        const productsData = await Promise.all(productPromises);
+        setProducts(productsData);
+        // Assuming setProducts is for an array of products
       } catch (error) {
-        console.error("Error fetching cart items:", error);
+        console.error("Error fetching products:", error);
       }
     };
 
-    fetchCartItems();
-  }, []);
+    fetchProducts();
+  }, [productIds]);
+  console.log(products);
 
-  console.log(cartItems);
-
-
-
-  
-
-
-  if (error) return <div>{error}</div>;
-  if (!cartInfo) return <div>Loading cart...</div>;
+  // if (error) return <div>{error}</div>;
+  // if (!cartInfo) return <div>Đang tải giỏ hàng...</div>;
 
   return (
     <div>
@@ -93,14 +110,30 @@ function ShoppingCart({ customerId }) {
             <h4>Tổng cộng</h4>
           </div>
           <div>
-            <ItemShoppingCart InformationPrd={info6} />
-            
+            {products.map((product) => (
+              <ItemShoppingCart
+                key={product.id}
+                InformationPrd={{
+                  id: product.id,
+                  imgUrl1: product.img_product,
+                  name: product.nameProduct,
+                  price: product.priceProduct,
+                  size:
+                    product.skus?.[0]?.size_attribute_id ||
+                    "Không có kích thước",
+                  color: product.skus?.[0]?.color_attribute_id || "Không có màu"
+                }}
+              />
+            ))}
           </div>
         </div>
         <div className="mainRightShoppingCart">
-          <h3>Tổng phụ: {cartInfo.subTotal}</h3>
-          <h2>Tổng cộng: {cartInfo.total}</h2>
-          <textarea placeholder="Ghi chú đặt hàng"></textarea>
+          <div>
+            <textarea placeholder="Ghi chú đặt hàng"></textarea>
+          </div>
+          <div>
+            <button className="buyProduct">Đặt hàng</button>
+          </div>
         </div>
       </div>
     </div>

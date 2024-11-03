@@ -11,48 +11,17 @@ import { Link, useParams } from "react-router-dom";
 import ProductCottonUSAInHomePage from "../CottonUSAPage/HomePageCottonUSA/ProductInHomePage";
 import axios from "axios";
 function ProductDetailCottonUSA() {
-  
   const { id } = useParams(); // Lấy ID sản phẩm từ URL
   const [value, setValue] = useState(1);
   const [showPrevervs, setShowPrevevs] = useState(false);
   const [showShip, setShowShip] = useState(false);
   const [returnProduct, setReturnProduct] = useState(false);
   const [product, setProduct] = useState(null); // Trạng thái để lưu sản phẩm chi tiết
-  const [selectedColor, setSelectedColor] = useState('');
+  const [selectedColor, setSelectedColor] = useState("");
   const [availableColors, setAvailableColors] = useState([]);
   const [cart, setCart] = useState([]);
   const [availableSize, setAvailableSize] = useState([]);
-  const addToCart = async () => {
-    try {
-      const response = await axios.post(`http://localhost:80/api/cart/1/add/${id}?quantity=${value}`, { // Replace 1 with dynamic customerId
-        productId: id,
-        quantity: value, // Use value state for quantity
-        selectedColor: selectedColor,
-        selectedSize: selectedSize,
-        
-        
-      });
-      setCart(response.data);
-      alert("Product added to cart successfully!");
-    } catch (error) {
-      console.error("Error adding product to cart:", error);
-      alert("Failed to add product to cart.");
-    }
-  };
-  
-  // Hàm để xử lý khi nhấp vào màu
-  const handleColorClick = (color) => {
-    setSelectedColor(color);
-    
-  };
 
-  const [selectedSize, setSelectedSize] = useState('');
-
-  // Hàm để xử lý khi nhấp vào size
-  const handleSizeClick = (size) => {
-    setSelectedSize(size);
-  };
- console.log(id);
   useEffect(() => {
     fetch(`http://localhost:80/api/products/findProduct/${id}`)
       .then((response) => response.json()) // Convert response to JSON
@@ -63,10 +32,8 @@ function ProductDetailCottonUSA() {
             imgUrl1: data.img_product,
             name: data.nameProduct,
             price: data.priceProduct,
-            description: "Chất liệu: 100% Cotton", 
-            skus: data.skus, 
-          
-
+            description: "Chất liệu: 100% Cotton",
+            skus: data.skus
           });
           const colors = data.skus.map((sku) => sku.color_attribute_id);
           setAvailableColors([...new Set(colors)]);
@@ -81,6 +48,52 @@ function ProductDetailCottonUSA() {
         console.error("Error fetching product:", error);
       });
   }, [id]);
+
+  const addToCart = async () => {
+    try {
+      if (selectedColor != "" && selectedSize != "") {
+        const response = await axios.post(
+          `http://localhost:80/api/cart/1/add/${id}?quantity=${value}&sizeAttributeId=${selectedSize}&colorAttributeId=${selectedColor}`,
+          {
+            // Replace 1 with dynamic customerId
+            productId: id,
+            quantity: value, // Use value state for quantity
+            ColorAttributeId: selectedColor,
+            SizeAttributeId: selectedSize,
+            img_product: product.imgUrl1,
+            price: product.price
+          }
+        );
+        console.log(selectedSize)
+        console.log(selectedColor)
+
+        setCart(response.data);
+        console.log(cart);
+        console.log(selectedColor);
+        console.log(selectedSize);
+        alert("Product added to cart successfully!");
+      } else {
+        alert("Bạn chưa chọn size hoặc màu");
+      }
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      alert("Failed to add product to cart.");
+    }
+  };
+
+  // Hàm để xử lý khi nhấp vào màu
+  const handleColorClick = (color) => {
+    setSelectedColor(color);
+  };
+
+  const [selectedSize, setSelectedSize] = useState("");
+
+  // Hàm để xử lý khi nhấp vào size
+  const handleSizeClick = (size) => {
+    setSelectedSize(size);
+  };
+  console.log(id);
+  //
 
   const addProduct = () => {
     setValue(value + 1);
@@ -111,11 +124,10 @@ function ProductDetailCottonUSA() {
   const images = [
     {
       original: product.imgUrl1,
-      thumbnail: product.imgUrl1,
-    },
+      thumbnail: product.imgUrl1
+    }
     // Thêm nhiều hình ảnh hơn nếu cần
   ];
-
 
   return (
     <div>
@@ -140,54 +152,52 @@ function ProductDetailCottonUSA() {
             <p className="TichKiem">Tiết kiệm 68%</p>
           </div>
           <div className="OptionColor">
-            <p>Màu:</p>
-            <p>{selectedColor}</p>
-          </div>
+        <p>Màu:</p>
+        <p>{selectedColor}</p>
+      </div>
 
-          <div className="OptionItemColor">
-            {/* Hiển thị danh sách các màu */}
-            {availableColors.map((color) => (
-              <p
-                key={color}
-                onClick={() => handleColorClick(color)}
-                style={{
-                  border:
-                    selectedColor === color
-                      ? "3px solid black"
-                      : "1px solid black",
-                  padding: "10px",
-                  cursor: "pointer",
-                  marginRight: "20px"
-                }}
-              >
-                {color}
-              </p>
-            ))}
-          </div>
+      {availableColors.map((colorId) => {
+        const colorName = colorId === 2 ? "Trắng" : colorId === 1 ? "Đen" : colorId;
+        return (
+          <p
+            key={colorId}
+            onClick={() => handleColorClick(colorId)}
+            style={{
+              border: selectedColor === colorId ? "3px solid black" : "1px solid black",
+              padding: "10px",
+              cursor: "pointer",
+              marginRight: "20px"
+            }}
+          >
+            Màu: {colorName}
+          </p>
+        );
+      })}
 
-          <div className="OptionColor">
-            <p>Cỡ: </p>
-            <p> {selectedSize}</p>
-          </div>
-          <div className="OptionItemColor">
-          {availableSize.map((sizes) => (
-              <p
-                key={sizes}
-                onClick={() => handleSizeClick(sizes)}
-                style={{
-                  border:
-                    selectedColor === sizes
-                      ? "3px solid black"
-                      : "1px solid black",
-                  padding: "10px",
-                  cursor: "pointer",
-                  marginRight: "20px"
-                }}
-              >
-                {sizes}
-              </p>
-            ))}
-          </div>
+      <div className="OptionColor">
+        <p>Cỡ:</p>
+        <p>{selectedSize}</p>
+      </div>
+
+      {availableSize.map((sizeId) => {
+        const sizeLabel = sizeId === 2 ? "L" : sizeId === 1 ? "M" : sizeId;
+        return (
+          <p
+            key={sizeId}
+            onClick={() => handleSizeClick(sizeId)}
+            style={{
+              border:
+                selectedSize === sizeId ? "3px solid black" : "1px solid black",
+              padding: "10px",
+              cursor: "pointer",
+              marginRight: "20px"
+            }}
+          >
+            Cỡ: {sizeLabel}
+          </p>
+        );
+      })}
+
           <div className="OptionColor">
             <p>Số lượng :</p>
           </div>
@@ -199,7 +209,7 @@ function ProductDetailCottonUSA() {
             </div>
           </div>
           <div className="buttonToShoppingCart">
-            <button onClick={() => addToCart(1, 2, 50000)}>
+            <button onClick={() => addToCart(1, product.id, product.price)}>
               Thêm vào giỏ hàng
             </button>
           </div>
