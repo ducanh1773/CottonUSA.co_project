@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 const signUpUser = async (userData) => {
     try {
-        const response = await fetch('https://suitable-pug-typically.ngrok-free.app/customers', {
+        const response = await fetch('http://localhost:80/api/customers', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

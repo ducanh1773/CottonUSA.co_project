@@ -4,102 +4,105 @@ import "./index.css";
 import { Link } from "react-router-dom";
 
 function ItemShoppingCart(props) {
-  const [value, setValue] = useState(1);
-  const [sumPrice, setSumPrice] = useState(props.InformationPrd.price || 0);
-  const [showPrd, setShowPrd] = useState(true);
-  const [error, setError] = useState(null);
+    const [value, setValue] = useState(1);
+    const [sumPrice, setSumPrice] = useState(props.InformationPrd.price || 0);
+    const [showPrd, setShowPrd] = useState(true);
+    const [error, setError] = useState(null);
 
-  const handleInputChange = (event) => {
-    const newValue = parseInt(event.target.value, 10) || 1;
-    setValue(newValue);
-    setSumPrice(newValue * props.InformationPrd.price);
-  };
-
-  // Debounce quantity update to avoid multiple requests
-  useEffect(() => {
-    const updateQuantity = async () => {
-      try {
-        await axios.put(`http://localhost:80/api/cart/1/updateQuantity`, {
-          productId: props.InformationPrd.id,
-          quantity: value,
-        });
-        console.log("Quantity updated successfully");
-        setError(null); // Clear any previous error
-      } catch (error) {
-        console.error("Error updating quantity:", error);
-        setError("Could not update quantity. Please try again.");
-      }
+    const handleInputChange = (event) => {
+        const newValue = parseInt(event.target.value, 10) || 1;
+        setValue(newValue);
+        setSumPrice(newValue * props.InformationPrd.price);
     };
 
-    const debounceTimeout = setTimeout(updateQuantity, 500); // 500ms delay
-    return () => clearTimeout(debounceTimeout); // Clear timeout if value changes
-  }, [value, props.InformationPrd.id]);
+    // useEffect(() => {
+    //     const updateQuantity = async () => {
+    //         if (!showPrd) return; // Không gửi yêu cầu nếu sản phẩm đã bị xóa
 
-  const handleClickDeletePrd = async () => {
-    if (window.confirm("Are you sure you want to remove this item?")) {
-      try {
-        // Gọi API để xóa sản phẩm khỏi giỏ hàng
-        await axios.delete(`http://localhost:80/api/cart/1/items/${props.InformationPrd.id}`);
-        console.log("Product removed successfully");
+    //         try {
+    //             const token = localStorage.getItem('token');
+    //             await axios.put(`http://localhost:80/api/cart/updateQuantity`, {
+    //                 productId: props.InformationPrd.id,
+    //                 quantity: value,
+    //                 sizeAttributeId: props.InformationPrd.size,
+    //                 colorAttributeId: props.InformationPrd.color
+    //             }, {
+    //                 headers: { Authorization: `Bearer ${token}` }
+    //             });
+    //             setError(null); // Clear any previous error
+    //         } catch (error) {
+    //             console.error("Error updating quantity:", error);
+    //             setError("Không thể cập nhật số lượng. Vui lòng thử lại.");
+    //         }
+    //     };
+        
 
-        // Ẩn sản phẩm khỏi giao diện sau khi xóa thành công
-        setShowPrd(false);
-        setError(null); // Clear any previous error
-      } catch (error) {
-        console.error("Error removing product:", error);
-        setError("Could not remove product. Please try again.");
-      }
-    }
-  };
+    //     const debounceTimeout = setTimeout(updateQuantity, 500); // 500ms delay
+    //     return () => clearTimeout(debounceTimeout); // Clear timeout if value changes
+    // }, [value, props.InformationPrd.id, showPrd]);
+    
 
-  const t = props.InformationPrd;
+    const handleClickDeletePrd = async () => {
+        if (window.confirm("Bạn có chắc chắn muốn gỡ bỏ sản phẩm này không?")) {
+            try {
+                const token = localStorage.getItem('token');
+                await axios.delete(`http://localhost:80/api/cart/items/${props.InformationPrd.id}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setShowPrd(false);
+                setError(null); // Clear any previous error
+            } catch (error) {
+                console.error("Error removing product:", error);
+                setError("Không thể gỡ bỏ sản phẩm. Vui lòng thử lại.");
+            }
+        }
+    };
 
-  return showPrd ? (
-    <div className="allItemObjectShoppingCart">
-      <div>
-        <input type="checkbox"></input>
-      </div>
-      <div className="oneItermPrdOfItemObjectShoppingCart">
-        <div className="imgOfShoppingCart">
-          <img src={t.imgUrl1} alt={t.name} />
+    return showPrd ? (
+        <div className="allItemObjectShoppingCart">
+            <div>
+                <input type="checkbox" name=""></input>
+            </div>
+            <div className="oneItemPrdOfItemObjectShoppingCart">
+                <div className="imgOfShoppingCart">
+                    <img src={props.InformationPrd.imgUrl1} alt={props.InformationPrd.name} />
+                </div>
+                <div className="mainRightOfOneItemPrdOfItemObjectShoppingCart">
+                    <div className="namePrdOfItemObjectShoppingCart">
+                        <Link to={`/product/${props.InformationPrd.id}`}>
+                            <h4>{props.InformationPrd.name}</h4>
+                        </Link>
+                    </div>
+                    <div className="pricePrdOfItemObjectShoppingCart">
+                        <p>{props.InformationPrd.price}đ</p>
+                    </div>
+                    <div className="sizePrdOfItemObjectShoppingCart">
+                        <p>{props.InformationPrd.size || "Không có kích thước"}</p>
+                    </div>
+                    <div className="colorPrdOfItemObjectShoppingCart">
+                        <p>{props.InformationPrd.color || "Không có màu"}</p>
+                    </div>
+                </div>
+            </div>
+            <div className="numberPrdOfItemObjectShoppingCart">
+                <form>
+                    <input
+                        type="number"
+                        value={value}
+                        onChange={handleInputChange}
+                        min="1"
+                    />
+                    <p onClick={handleClickDeletePrd} className="removeLink">
+                        Gỡ bỏ
+                    </p>
+                </form>
+            </div>
+            <div className="totalPricePrdOfItemObjectShoppingCart">
+                <p>Tổng: {sumPrice}đ</p>
+            </div>
+            {error && <p className="error-message">{error}</p>}
         </div>
-        <div className="mainRightOfOneItermPrdOfItemObjectShoppingCart">
-          <div className="namePrdOfItemObjectShoppingCart">
-            <Link to={`/product/${t.id}`}>
-              <h4>{t.name}</h4>
-            </Link>
-          </div>
-          <div className="pricePrdOfItemObjectShoppingCart">
-            <p>{t.price}đ</p>
-          </div>
-          <div className="sizePrdOfItemObjectShoppingCart">
-            <p>{t.size || "Không có kích thước"}</p>
-          </div>
-          <div className="colorPrdOfItemObjectShoppingCart">
-            <p>{t.color || "Không có màu"}</p>
-          </div>
-        </div>
-      </div>
-      <div className="numberPrdOfItemObjectShoppingCart">
-        <form>
-          <input
-            type="number"
-            value={value}
-            onChange={handleInputChange}
-            min="1"
-          />
-          <p onClick={handleClickDeletePrd} className="removeLink">
-            Gỡ bỏ
-          </p>
-        </form>
-      </div>
-
-      <div className="totalPricePrdOfItemObjectShoppingCart">
-        <p>Tổng: {sumPrice}đ</p>
-      </div>
-      {error && <p className="error-message">{error}</p>}
-    </div>
-  ) : null;
+    ) : null;
 }
 
 export default ItemShoppingCart;

@@ -14,12 +14,14 @@ import SecurityPrivate from './CottonUSAPage/SecurityPrivate';
 import ContactPageUSA from './CottonUSAPage/ContactPageCottonUSA';
 import ProductDetailCottonUSA from './CottonUSAProductDetail';
 import ShoppingCart from './CottonUSAPage/ShoppingCart';
+import OrderConfirmation from './CottonUSAPage/OrderConfirmation';
 import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
 
 import {getTodos ,postTodo} from "../src/CottonUSAPage/SignInPageCottonUSA";
+
 const queryClient = new QueryClient()
 function App() {
   return (
@@ -37,6 +39,7 @@ function App() {
         <Route path='/contact' element={<ContactPageUSA></ContactPageUSA>}></Route>
         <Route path='/products/:id'element={<ProductDetailCottonUSA></ProductDetailCottonUSA>}></Route>
         <Route path='/shopping_cart' element={<ShoppingCart></ShoppingCart>}></Route>
+        <Route path='/order_confirmation' element={<OrderConfirmation></OrderConfirmation>}></Route>
         
       
       </Routes>

@@ -4,34 +4,33 @@ import HeaderCottonUSA from "../HeaderCottonUSA";
 import EndPageCottonUSA from "../endPage";
 import { Link } from "react-router-dom";
 import "./index.css";
+
 const signInUser = async (userData) => {
     try {
-        const response = await fetch('https://suitable-pug-typically.ngrok-free.app/login', {
+        const response = await fetch('http://localhost:80/api/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(userData),
-            withCredentials: true
+            body: JSON.stringify(userData)
         });
 
-        const data = await response.json(); // Expecting JSON response
+        const data = await response.json();
 
         if (!response.ok) {
             throw new Error(data.message || 'Something went wrong!');
         }
 
-        // Assuming the response contains a token in the data object
         if (data.token) {
             localStorage.setItem('token', data.token);
-            sessionStorage.setItem('sessionToken', data.token);
         }
 
-        return data.message; // Return the response message
+        return data.message;
     } catch (error) {
-        throw new Error(error.message); // Handle error cases
+        throw new Error(error.message);
     }
 };
+
 function SignInCottonUSA() {
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);

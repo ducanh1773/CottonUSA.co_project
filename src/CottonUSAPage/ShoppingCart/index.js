@@ -3,141 +3,166 @@ import axios from "axios";
 import "./index.css";
 import HeaderCottonUSA from "../HeaderCottonUSA";
 import ItemShoppingCart from "./ItemShoppingCart/index";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from 'jwt-decode';
 
-function ShoppingCart({ customerId }) {
-  const [cartInfo, setCartInfo] = useState(null); // Chứa thông tin giỏ hàng
-  const [error, setError] = useState(null);
-  const [cartItems, setCartItems] = useState([]); // Chứa danh sách sản phẩm chi tiết
-  const { id } = 12;
-  const [productIds, setProductIds] = useState({});
-  const [products, setProducts] = useState([]);
-  // useEffect(() => {
-  //  //  Lấy thông tin giỏ hàng dựa trên ID khách hàng
-  //   const fetchCartInfo = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `http://localhost:80/api/cart/1/product-ids`
-  //       );
-  //       setCartInfo(response.data);
-  //     } catch (err) {
-  //       setError("Không thể lấy thông tin giỏ hàng.");
-  //       console.error(err);
-  //     }
-  //   };
+function ShoppingCart() {
+    const [products, setProducts] = useState([]); // Array of product IDs
+    const [detailedProducts, setDetailedProducts] = useState([]); // Array for detailed product info
+    const [error, setError] = useState(null);
+    const [orderMessage, setOrderMessage] = useState(null);
+    const navigate = useNavigate();
 
-  //   fetchCartInfo();
-  // }, [customerId]);
+    useEffect(() => {
+        const fetchProductsInCart = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setError("Bạn chưa đăng nhập.");
+                return;
+            }
 
-  useEffect(() => {
-    const fetchProductIds = async (cartId) => {
-      try {
-        const response = await axios.get(
-          `http://localhost:80/api/cart/${cartId}/product-ids`
-        );
-        setProductIds(response.data);
+            try {
+                const response = await axios.get(
+                    `http://localhost:80/api/cart/items`,
+                    {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }
+                );
+                setProducts(response.data); // Set array of product IDs
+            } catch (error) {
+                console.error("Error fetching products:", error);
+                setError("Không thể lấy thông tin giỏ hàng.");
+            }
+        };
 
-        console.log("Product IDs:", productIds);
-      } catch (error) {
-        console.error("Error fetching product IDs:", error);
-      }
+        fetchProductsInCart();
+    }, []);
+
+    useEffect(() => {
+        const fetchProductDetails = async () => {
+            try {
+                const detailed = await Promise.all(
+                    products.map(productId =>
+                        axios.get(`http://localhost:80/api/products/findProduct/${productId}`)
+                            .then(response => response.data)
+                            .catch(error => {
+                                console.error(`Error fetching product ${productId}:`, error);
+                                return null; // Return null if there's an error fetching the product
+                            })
+                    )
+                );
+                setDetailedProducts(detailed.filter(product => product)); // Filter out nulls
+            } catch (error) {
+                console.error("Error fetching product details:", error);
+            }
+        };
+
+        if (products.length) {
+            fetchProductDetails();
+        }
+    }, [products]);
+
+    const handlePlaceOrder = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setError("Bạn chưa đăng nhập.");
+            return;
+        }
+
+        try {
+            const response = await axios.post(
+                'http://localhost:80/api/orders',
+                { products }, // Send the array of product IDs
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+
+            if (response.data.success) {
+                setOrderMessage("Đặt hàng thành công!");
+                setTimeout(() => {
+                    navigate("/order_confirmation");
+                }, 1000);
+            } else {
+                setOrderMessage("Đặt hàng không thành công. Vui lòng thử lại.");
+            }
+        } catch (error) {
+            console.error("Error placing order:", error);
+            setOrderMessage("Có lỗi xảy ra khi đặt hàng.");
+        }
     };
 
-    // Example cartId to be replaced by dynamic data
-    const cartId = 1;
-    fetchProductIds(cartId);
-  }, []);
+    if (error) return <div className="error">{error}</div>;
+    if (!detailedProducts.length) return <div>Đang tải giỏ hàng...</div>;
 
-  console.log(productIds);
+    return (
+        <div>
+            <HeaderCottonUSA />
+            <div className="subjectShoppingCart">
+                <h1>Giỏ hàng</h1>
+            </div>
+            <div className="allObjectOfShoppingCart">
+                <div className="mainLeftShoppingCart">
+                    <div className="objectOfShoppingCart">
+                        <h4 className="prdOfObjectOfShoppingCart">Sản phẩm</h4>
+                        <h4 className="numberOfObjectOfShoppingCart">Số lượng</h4>
+                        <h4>Tổng cộng</h4>
+                    </div>
+                    <div>
+                    {detailedProducts.map((product) => {
+                            // Determine size and color based on product ID
+                            let color = "Không có màu";
+                            let size = "Không có kích thước";
 
-  // useEffect(() => {
-  //   fetch(`http://localhost:80/api/products/findProduct/1`)
-  //     .then((response) => response.json()) // Convert response to JSON
-  //     .then((data) => {
-  //       console.log(data); // Debug log
-  //       if (data) {
-  //         setProduct({
-  //           imgUrl1: data.img_product,
-  //           name: data.nameProduct,
-  //           price: data.priceProduct,
-  //           description: "Chất liệu: 100% Cotton",
-  //           skus: data.skus
-  //         });
-  //         console.log(product);
-  //       } else {
-  //         console.log("Product not found");
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching product:", error);
-  //     });
-  // }, [id]);
+                            if (product.id === 1) {
+                                color = "Trắng"; // White
+                                size = "L"; // Size L
+                            } else if (product.id === 0) {
+                                color = "Đen"; // Black
+                                size = "M"; // Size M
+                            }
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const productPromises = productIds.map((id) =>
-          fetch(`http://localhost:80/api/products/findProduct/${id}`).then(
-            (response) => response.json()
-          )
-        );
-
-        const productsData = await Promise.all(productPromises);
-        setProducts(productsData);
-        // Assuming setProducts is for an array of products
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    fetchProducts();
-  }, [productIds]);
-  console.log(products);
-
-  // if (error) return <div>{error}</div>;
-  // if (!cartInfo) return <div>Đang tải giỏ hàng...</div>;
-
-  return (
-    <div>
-      <HeaderCottonUSA />
-      <div className="subjectShoppingCart">
-        <h1>Giỏ hàng</h1>
-      </div>
-      <div className="allObjectOfShoppingCart">
-        <div className="mainLeftShoppingCart">
-          <div className="objectOfShoppingCart">
-            <h4 className="prdOfObjectOfShoppingCart">Sản phẩm</h4>
-            <h4 className="numberOfObjectOfShoppingCart">Số lượng</h4>
-            <h4>Tổng cộng</h4>
-          </div>
-          <div>
-            {products.map((product) => (
-              <ItemShoppingCart
-                key={product.id}
-                InformationPrd={{
-                  id: product.id,
-                  imgUrl1: product.img_product,
-                  name: product.nameProduct,
-                  price: product.priceProduct,
-                  size:
-                    product.skus?.[0]?.size_attribute_id ||
-                    "Không có kích thước",
-                  color: product.skus?.[0]?.color_attribute_id || "Không có màu"
-                }}
-              />
-            ))}
-          </div>
+                            return (
+                              <ItemShoppingCart
+                                key={product.id}
+                                InformationPrd={{
+                                  id: product.id,
+                                  imgUrl1: product.img_product,
+                                  name: product.nameProduct,
+                                  price: product.priceProduct,
+                                  size:
+                                    product.skus?.[0]?.size_attribute_id === 1
+                                      ? "M"
+                                      : product.skus?.[0]?.size_attribute_id ===
+                                        0
+                                      ? "L"
+                                      : "Không có kích thước",
+                                  color: product.skus?.[0]?.color_attribute_id === 1
+                                      ? "Trắng"
+                                      : product.skus?.[0]?.color_attribute_id ===
+                                        0
+                                      ? "Đen"
+                                      : "Không có kích thước",
+                                }}
+                              />
+                            );
+                        })}
+                    </div>
+                </div>
+                <div className="mainRightShoppingCart">
+                    <div>
+                        <textarea placeholder="Ghi chú đặt hàng"></textarea>
+                    </div>
+                    <div>
+                        <button className="buyProduct" onClick={handlePlaceOrder}>
+                            Đặt hàng
+                        </button>
+                    </div>
+                </div>
+                {orderMessage && <div className="orderMessage">{orderMessage}</div>}
+            </div>
         </div>
-        <div className="mainRightShoppingCart">
-          <div>
-            <textarea placeholder="Ghi chú đặt hàng"></textarea>
-          </div>
-          <div>
-            <button className="buyProduct">Đặt hàng</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+    );
 }
 
 export default ShoppingCart;

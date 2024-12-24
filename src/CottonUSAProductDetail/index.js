@@ -10,6 +10,7 @@ import "react-image-gallery/styles/css/image-gallery.css";
 import { Link, useParams } from "react-router-dom";
 import ProductCottonUSAInHomePage from "../CottonUSAPage/HomePageCottonUSA/ProductInHomePage";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 function ProductDetailCottonUSA() {
   const { id } = useParams(); // Lấy ID sản phẩm từ URL
   const [value, setValue] = useState(1);
@@ -29,6 +30,7 @@ function ProductDetailCottonUSA() {
         console.log(data); // Debug log
         if (data) {
           setProduct({
+            id: data.id,
             imgUrl1: data.img_product,
             name: data.nameProduct,
             price: data.priceProduct,
@@ -50,34 +52,58 @@ function ProductDetailCottonUSA() {
   }, [id]);
 
   const addToCart = async () => {
+  
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You are not logged in!");
+      return;
+    }
     try {
-      if (selectedColor != "" && selectedSize != "") {
+      if (selectedColor !== "" && selectedSize !== "") {
+        // Lấy token từ localStorage
+        const token = localStorage.getItem("token"); // Giả sử token được lưu trong localStorage
+
+        if (!token) {
+          alert("You are not logged in!");
+          return;
+        }
+        console.log("Token being sent: ", token);
+
+        // Lấy customerId từ token
+        const decodedToken = jwtDecode(token);
+        console.log(decodedToken);
+        const email = decodedToken.sub; // Lấy customerId từ token
+        console.log(email);
+        console.log("Token being sent: ", token);
+
+        // Gửi yêu cầu API để thêm sản phẩm vào giỏ hàng
         const response = await axios.post(
-          `http://localhost:80/api/cart/1/add/${id}?quantity=${value}&sizeAttributeId=${selectedSize}&colorAttributeId=${selectedColor}`,
+          `http://localhost:80/api/cart/add/${product.id}?quantity=${value}&sizeAttributeId=${selectedSize}&colorAttributeId=${selectedColor}`,
           {
-            // Replace 1 with dynamic customerId
-            productId: id,
-            quantity: value, // Use value state for quantity
-            ColorAttributeId: selectedColor,
-            SizeAttributeId: selectedSize,
+            productId: product.id,
+            quantity: value, // Sử dụng giá trị quantity từ state
+            colorAttributeId: selectedColor,
+            sizeAttributeId: selectedSize,
             img_product: product.imgUrl1,
             price: product.price
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}` // Thêm token vào header
+            }
           }
         );
-        console.log(selectedSize)
-        console.log(selectedColor)
+        console.log(typeof product.id);
 
-        setCart(response.data);
-        console.log(cart);
-        console.log(selectedColor);
-        console.log(selectedSize);
+        console.log(response.data);
+        setCart(response.data); // Cập nhật lại giỏ hàng từ response
         alert("Product added to cart successfully!");
       } else {
         alert("Bạn chưa chọn size hoặc màu");
       }
     } catch (error) {
       console.error("Error adding product to cart:", error);
-      alert("Failed to add product to cart.");
+      alert("Không thêm được sản phẩm vào giỏ hàng.");
     }
   };
 
@@ -121,6 +147,8 @@ function ProductDetailCottonUSA() {
     return <div>Sản phẩm không tồn tại hoặc đang tải...</div>;
   }
 
+  console.log(selectedColor);
+
   const images = [
     {
       original: product.imgUrl1,
@@ -128,7 +156,6 @@ function ProductDetailCottonUSA() {
     }
     // Thêm nhiều hình ảnh hơn nếu cần
   ];
-
   return (
     <div>
       <HeaderCottonUSA />
@@ -152,51 +179,57 @@ function ProductDetailCottonUSA() {
             <p className="TichKiem">Tiết kiệm 68%</p>
           </div>
           <div className="OptionColor">
-        <p>Màu:</p>
-        <p>{selectedColor}</p>
-      </div>
+            <p>Màu:</p>
+            <p>{selectedColor}</p>
+          </div>
 
-      {availableColors.map((colorId) => {
-        const colorName = colorId === 2 ? "Trắng" : colorId === 1 ? "Đen" : colorId;
-        return (
-          <p
-            key={colorId}
-            onClick={() => handleColorClick(colorId)}
-            style={{
-              border: selectedColor === colorId ? "3px solid black" : "1px solid black",
-              padding: "10px",
-              cursor: "pointer",
-              marginRight: "20px"
-            }}
-          >
-            Màu: {colorName}
-          </p>
-        );
-      })}
+          {availableColors.map((colorId) => {
+            const colorName =
+              colorId === 2 ? "Trắng" : colorId === 1 ? "Đen" : colorId;
+            return (
+              <p
+                key={colorId}
+                onClick={() => handleColorClick(colorId)}
+                style={{
+                  border:
+                    selectedColor === colorId
+                      ? "3px solid black"
+                      : "1px solid black",
+                  padding: "10px",
+                  cursor: "pointer",
+                  marginRight: "20px"
+                }}
+              >
+                Màu: {colorName}
+              </p>
+            );
+          })}
 
-      <div className="OptionColor">
-        <p>Cỡ:</p>
-        <p>{selectedSize}</p>
-      </div>
+          <div className="OptionColor">
+            <p>Cỡ:</p>
+            <p>{selectedSize}</p>
+          </div>
 
-      {availableSize.map((sizeId) => {
-        const sizeLabel = sizeId === 2 ? "L" : sizeId === 1 ? "M" : sizeId;
-        return (
-          <p
-            key={sizeId}
-            onClick={() => handleSizeClick(sizeId)}
-            style={{
-              border:
-                selectedSize === sizeId ? "3px solid black" : "1px solid black",
-              padding: "10px",
-              cursor: "pointer",
-              marginRight: "20px"
-            }}
-          >
-            Cỡ: {sizeLabel}
-          </p>
-        );
-      })}
+          {availableSize.map((sizeId) => {
+            const sizeLabel = sizeId === 2 ? "L" : sizeId === 1 ? "M" : sizeId;
+            return (
+              <p
+                key={sizeId}
+                onClick={() => handleSizeClick(sizeId)}
+                style={{
+                  border:
+                    selectedSize === sizeId
+                      ? "3px solid black"
+                      : "1px solid black",
+                  padding: "10px",
+                  cursor: "pointer",
+                  marginRight: "20px"
+                }}
+              >
+                Cỡ: {sizeLabel}
+              </p>
+            );
+          })}
 
           <div className="OptionColor">
             <p>Số lượng :</p>
