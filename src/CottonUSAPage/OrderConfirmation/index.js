@@ -40,21 +40,21 @@ function OrderConfirmation({ cartId }) {
   }, [customerInfo.address]);
   
   // Lấy danh sách product IDs từ giỏ hàng
-  useEffect(() => {
-    const fetchProductIds = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:80/api/cart/1/product-ids`
-        );
-        setProductIds(response.data);
-      } catch (error) {
-        setError("Không thể lấy danh sách sản phẩm trong giỏ hàng.");
-        console.error(error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchProductIds = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `http://localhost:80/api/cart/1/product-ids`
+  //       );
+  //       setProductIds(response.data);
+  //     } catch (error) {
+  //       setError("Không thể lấy danh sách sản phẩm trong giỏ hàng.");
+  //       console.error(error);
+  //     }
+  //   };
 
-    fetchProductIds();
-  }, [cartId]);
+  //   fetchProductIds();
+  // }, [cartId]);
 
   // Cập nhật trạng thái nút đặt hàng
   useEffect(() => {
