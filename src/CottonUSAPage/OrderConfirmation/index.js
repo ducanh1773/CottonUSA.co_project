@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./index.css";
-
+import { useHistory } from "react-router-dom";
 function OrderConfirmation({ cartId }) {
   const [productIds, setProductIds] = useState([]);
   const [products, setProducts] = useState([]);
@@ -15,6 +15,67 @@ function OrderConfirmation({ cartId }) {
   const [error, setError] = useState(null);
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
   const [shippingFee, setShippingFee] = useState(null);
+  const [detailedProducts, setDetailedProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const history = useHistory();
+  useEffect(() => {
+    const fetchProductsInCart = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setError("Bạn chưa đăng nhập.");
+            return;
+        }
+
+        try {
+            const response = await axios.get(
+                `http://localhost:80/api/cart/items`,
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+            setProducts(response.data); // Set array of product IDs
+        } catch (error) {
+            console.error("Error fetching products:", error);
+            setError("Không thể lấy thông tin giỏ hàng.");
+        }
+    };
+
+    fetchProductsInCart();
+}, []);
+
+useEffect(() => {
+  const fetchProductDetails = async () => {
+    try {
+      const detailed = await Promise.all(
+        products.map((productId) =>
+          axios
+            .get(`http://localhost:80/api/products/findProduct/${productId}`)
+            .then((response) => response.data)
+            .catch((error) => {
+              console.error(`Error fetching product ${productId}:`, error);
+              return null; // Return null if there's an error fetching the product
+            })
+        )
+      );
+      const filteredProducts = detailed.filter((product) => product); // Filter out nulls
+      setDetailedProducts(filteredProducts); // Set detailed products
+
+      // Calculate total price
+      const total = filteredProducts.reduce(
+        (sum, product) => sum + product.priceProduct, // Summing the price of each product
+        0
+      );
+      setTotalPrice(total); // Update total price state
+    } catch (error) {
+      console.error("Error fetching product details:", error);
+      setError("Không thể lấy thông tin chi tiết sản phẩm.");
+    }
+  };
+
+  if (products.length) {
+    fetchProductDetails();
+  }
+}, [products]);
 
   // Hàm tính phí ship
   const calculateShipping = async (address) => {
@@ -39,25 +100,7 @@ function OrderConfirmation({ cartId }) {
     calculateShipping(customerInfo.address); // Gọi hàm mỗi khi địa chỉ thay đổi
   }, [customerInfo.address]);
   
-  // Lấy danh sách product IDs từ giỏ hàng
-  // useEffect(() => {
-  //   const fetchProductIds = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `http://localhost:80/api/cart/1/product-ids`
-  //       );
-  //       setProductIds(response.data);
-  //     } catch (error) {
-  //       setError("Không thể lấy danh sách sản phẩm trong giỏ hàng.");
-  //       console.error(error);
-  //     }
-  //   };
-
-  //   fetchProductIds();
-  // }, [cartId]);
-
-  // Cập nhật trạng thái nút đặt hàng
-  useEffect(() => {
+    useEffect(() => {
     const isComplete =
       customerInfo.name &&
       customerInfo.address &&
@@ -108,25 +151,58 @@ function OrderConfirmation({ cartId }) {
     setCustomerInfo((prevInfo) => ({ ...prevInfo, [name]: value }));
   };
 
-  // Xử lý khi ấn nút đặt hàng
-  const handlePlaceOrder = async () => {
-    try {
-      const token = localStorage.getItem("token"); // Lấy token từ localStorage
-      const orderData = {
-        total_price: totalPrice + shippingFee, // Tổng tiền bao gồm phí ship
-        quantity: products.length,
-        product_ids: productIds,
-      };
+  
 
-      await axios.post("http://localhost:80/api/cart/place-order", orderData, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Thêm token vào header
-        },
-      });
-      alert("Đặt hàng thành công!");
+  const handlePlaceOrder = async () => {
+    setIsLoading(true); // Start loading
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("Bạn chưa đăng nhập.");
+        setIsLoading(false);
+        return;
+      }
+  
+      const orderData = {
+        total_price: totalPrice + (shippingFee || 0),
+        quantity: products.length,
+        product_ids: products.map((product) => product.id), // Ensure this is correct
+        customer_info: customerInfo,
+        payment_method: customerInfo.payment_method,
+        orderDetails: detailedProducts.map((product) => ({
+          price: product.priceProduct,
+          productId: product.id,
+          quantity: 1, // or the quantity you want to order
+          total: product.priceProduct // assuming total is just price for 1 item
+        }))
+      };
+   
+      console.log(totalPrice)
+      const response = await axios.post(
+        "http://localhost:80/api/order/create",
+        orderData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      if (response.status === 201) {
+        alert("Đặt hàng thành công!");
+        history.push("/"); 
+        // Optionally clear input fields or redirect
+      } else {
+        setError("Đặt hàng không thành công. Vui lòng thử lại.");
+      }
     } catch (error) {
-      setError("Không thể đặt hàng.");
+      const errorMessage = error.response?.data || error.message;
+      console.log(errorMessage)
+      setError("Không thể đặt hàng. Lỗi: " + errorMessage);
       console.error(error);
+    } finally {
+      setIsLoading(false); // End loading
     }
   };
 
@@ -137,7 +213,7 @@ function OrderConfirmation({ cartId }) {
       <h1>Xác nhận Đặt hàng</h1>
       <div className="orderInformationSucces">
         <div className="product-list">
-          {products.map((product) => (
+          {detailedProducts.map((product) => (
             <div key={product.id} className="product-item">
               <img src={product.img_product} alt={product.nameProduct} />
               <h4>{product.nameProduct}</h4>
@@ -190,6 +266,13 @@ function OrderConfirmation({ cartId }) {
             placeholder="Email"
             name="email"
             value={customerInfo.email}
+            onChange={handleInputChange}
+          />
+           <input
+            type="text"
+            placeholder="Phương thức thanh toán"
+            name="payment_method"
+            
             onChange={handleInputChange}
           />
         </div>
