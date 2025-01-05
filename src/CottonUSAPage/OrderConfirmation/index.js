@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";  // Thêm thư viện jwt-decode
 import "./index.css";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+
 function OrderConfirmation({ cartId }) {
-  const [productIds, setProductIds] = useState([]);
   const [products, setProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [customerInfo, setCustomerInfo] = useState({
@@ -11,79 +12,82 @@ function OrderConfirmation({ cartId }) {
     address: "",
     phone: "",
     email: "",
+    shipping_address: "",
+    payment_method: "", // Thêm trường payment_method
   });
   const [error, setError] = useState(null);
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
   const [shippingFee, setShippingFee] = useState(null);
   const [detailedProducts, setDetailedProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const history = useHistory();
+  const history = useNavigate();
   useEffect(() => {
     const fetchProductsInCart = async () => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            setError("Bạn chưa đăng nhập.");
-            return;
-        }
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("Bạn chưa đăng nhập.");
+        return;
+      }
 
-        try {
-            const response = await axios.get(
-                `http://localhost:80/api/cart/items`,
-                {
-                    headers: { Authorization: `Bearer ${token}` }
-                }
-            );
-            setProducts(response.data); // Set array of product IDs
-        } catch (error) {
-            console.error("Error fetching products:", error);
-            setError("Không thể lấy thông tin giỏ hàng.");
-        }
+      try {
+         // Lấy customerId từ token
+         const decodedToken = jwtDecode(token);
+         console.log(decodedToken);
+         const email = decodedToken.sub; // Lấy customerId từ token
+         console.log(email);
+         console.log("Token being sent: ", token);
+
+        const response = await axios.get(`http://localhost:80/api/cart/items`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setProducts(response.data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        setError("Không thể lấy thông tin giỏ hàng.");
+      }
     };
 
     fetchProductsInCart();
-}, []);
+  }, []);
 
-useEffect(() => {
-  const fetchProductDetails = async () => {
-    try {
-      const detailed = await Promise.all(
-        products.map((productId) =>
-          axios
-            .get(`http://localhost:80/api/products/findProduct/${productId}`)
-            .then((response) => response.data)
-            .catch((error) => {
-              console.error(`Error fetching product ${productId}:`, error);
-              return null; // Return null if there's an error fetching the product
-            })
-        )
-      );
-      const filteredProducts = detailed.filter((product) => product); // Filter out nulls
-      setDetailedProducts(filteredProducts); // Set detailed products
+  useEffect(() => {
+    const fetchProductDetails = async () => {
+      try {
+        const detailed = await Promise.all(
+          products.map((productId) =>
+            axios.get(`http://localhost:80/api/products/findProduct/${productId}`)
+              .then((response) => response.data)
+              .catch((error) => {
+                console.error(`Error fetching product ${productId}:`, error);
+                return null;
+              })
+          )
+        );
+        const filteredProducts = detailed.filter((product) => product);
+        setDetailedProducts(filteredProducts);
 
-      // Calculate total price
-      const total = filteredProducts.reduce(
-        (sum, product) => sum + product.priceProduct, // Summing the price of each product
-        0
-      );
-      setTotalPrice(total); // Update total price state
-    } catch (error) {
-      console.error("Error fetching product details:", error);
-      setError("Không thể lấy thông tin chi tiết sản phẩm.");
+        const total = filteredProducts.reduce(
+          (sum, product) => sum + product.priceProduct, 
+          0
+        );
+        setTotalPrice(total);
+      } catch (error) {
+        console.error("Error fetching product details:", error);
+        setError("Không thể lấy thông tin chi tiết sản phẩm.");
+      }
+    };
+
+    if (products.length) {
+      fetchProductDetails();
     }
-  };
+  }, [products]);
 
-  if (products.length) {
-    fetchProductDetails();
-  }
-}, [products]);
-
-  // Hàm tính phí ship
   const calculateShipping = async (address) => {
     if (!address || address.trim() === "") {
-      setShippingFee(null); // Xóa phí ship nếu địa chỉ không hợp lệ
+      setShippingFee(null);
       return;
     }
-  
+
     try {
       const response = await axios.post(
         "http://localhost:80/api/cart/shipping/calculate",
@@ -97,64 +101,27 @@ useEffect(() => {
   };
 
   useEffect(() => {
-    calculateShipping(customerInfo.address); // Gọi hàm mỗi khi địa chỉ thay đổi
+    calculateShipping(customerInfo.address);
   }, [customerInfo.address]);
-  
-    useEffect(() => {
+
+  useEffect(() => {
     const isComplete =
       customerInfo.name &&
       customerInfo.address &&
       customerInfo.phone &&
-      customerInfo.email;
-    setIsButtonEnabled(isComplete); // Cập nhật trạng thái nút
+      customerInfo.email &&
+      customerInfo.shipping_address &&
+      customerInfo.payment_method; // Kiểm tra payment_method
+    setIsButtonEnabled(isComplete);
   }, [customerInfo]);
 
-  // Gọi tính phí ship khi địa chỉ thay đổi
-  useEffect(() => {
-    if (customerInfo.address) {
-      calculateShipping(customerInfo.address);
-    }
-  }, [customerInfo.address]);
-
-  // Lấy chi tiết sản phẩm từ product IDs
-  useEffect(() => {
-    const fetchProductDetails = async () => {
-      try {
-        const productPromises = productIds.map((id) =>
-          axios.get(`http://localhost:80/api/products/findProduct/${id}`).then(
-            (response) => response.data
-          )
-        );
-        const productsData = await Promise.all(productPromises);
-        setProducts(productsData);
-
-        // Tính tổng giá tiền
-        const total = productsData.reduce(
-          (sum, product) => sum + product.priceProduct,
-          0
-        );
-        setTotalPrice(total); // Cập nhật tổng giá
-      } catch (error) {
-        setError("Không thể lấy thông tin chi tiết sản phẩm.");
-        console.error(error);
-      }
-    };
-
-    if (productIds.length > 0) {
-      fetchProductDetails();
-    }
-  }, [productIds]);
-
-  // Xử lý khi nhập thông tin khách hàng
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCustomerInfo((prevInfo) => ({ ...prevInfo, [name]: value }));
   };
 
-  
-
   const handlePlaceOrder = async () => {
-    setIsLoading(true); // Start loading
+    setIsLoading(true);
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -162,22 +129,28 @@ useEffect(() => {
         setIsLoading(false);
         return;
       }
-  
+
+      const decodedToken = jwtDecode(token);
+      console.log("dedec"+decodedToken)
+      const customerId = decodedToken.customerId; // Lấy customerId từ token
+      console.log(customerId)
       const orderData = {
-        total_price: totalPrice + (shippingFee || 0),
+        totalPrice: totalPrice + (shippingFee || 0),
         quantity: products.length,
-        product_ids: products.map((product) => product.id), // Ensure this is correct
+        product_ids: products.map((product) => product.id),
         customer_info: customerInfo,
-        payment_method: customerInfo.payment_method,
+        paymentMethod: customerInfo.payment_method,
+        shippingAddress: customerInfo.shipping_address,
+        userId: customerId, // Sử dụng customerId đã lấy từ token
         orderDetails: detailedProducts.map((product) => ({
           price: product.priceProduct,
           productId: product.id,
-          quantity: 1, // or the quantity you want to order
-          total: product.priceProduct // assuming total is just price for 1 item
-        }))
+          quantity: 1,
+          total: product.priceProduct,
+        })),
       };
-   
-      console.log(totalPrice)
+      console.log("Order Data:", orderData);
+
       const response = await axios.post(
         "http://localhost:80/api/order/create",
         orderData,
@@ -188,23 +161,22 @@ useEffect(() => {
           },
         }
       );
-  
+
       if (response.status === 201) {
         alert("Đặt hàng thành công!");
-        history.push("/"); 
-        // Optionally clear input fields or redirect
+        history.push("/");
       } else {
         setError("Đặt hàng không thành công. Vui lòng thử lại.");
       }
     } catch (error) {
       const errorMessage = error.response?.data || error.message;
-      console.log(errorMessage)
+      console.log(errorMessage);
       setError("Không thể đặt hàng. Lỗi: " + errorMessage);
-      console.error(error);
     } finally {
-      setIsLoading(false); // End loading
+      setIsLoading(false);
     }
   };
+
 
   if (error) return <div>{error}</div>;
 
@@ -237,7 +209,6 @@ useEffect(() => {
             </div>
           ))}
         </div>
-
         <div className="informationCustomer">
           <h2>Thông tin khách hàng</h2>
           <input
@@ -268,11 +239,18 @@ useEffect(() => {
             value={customerInfo.email}
             onChange={handleInputChange}
           />
-           <input
+          <input
             type="text"
             placeholder="Phương thức thanh toán"
             name="payment_method"
-            
+            value={customerInfo.payment_method}
+            onChange={handleInputChange}
+          />
+          <input
+            type="text"
+            placeholder="Địa chỉ giao hàng"
+            name="shipping_address"
+            value={customerInfo.shipping_address}
             onChange={handleInputChange}
           />
         </div>
@@ -294,11 +272,11 @@ useEffect(() => {
         <button
           onClick={handlePlaceOrder}
           id="submitButton"
-          disabled={!isButtonEnabled} // Nút chỉ khả dụng khi đủ thông tin
+          disabled={!isButtonEnabled}
           style={{
             backgroundColor: isButtonEnabled ? "#28a745" : "gray",
             color: "white",
-            cursor: isButtonEnabled ? "pointer" : "not-allowed"
+            cursor: isButtonEnabled ? "pointer" : "not-allowed",
           }}
         >
           Đặt Hàng
