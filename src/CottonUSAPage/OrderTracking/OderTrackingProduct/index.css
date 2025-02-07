@@ -1,0 +1,27 @@
+.all_item_on_ordertracking_product {
+    display: flex;
+    box-shadow:  0px 4px 8px rgba(0, 0, 0, 0.2); /* Thay border bằng box-shadow */
+    width: 100%;
+    height: 250px;
+    margin-left: 5%;
+    align-items: center;
+}
+.img_item_on_ordertyracking{
+    width: 15%;
+    padding-right: 2%;
+}
+.img_item_on_ordertyracking img{
+    width: 100%;
+    height: 200px;
+}
+.namePriceAndQuantityInTrackingOrder{
+    width: 40%;
+    display: grid;
+    align-items: center;
+}
+
+.sumPriceAllItem{
+    margin-left: 30%;
+    display: flex;
+    align-items: center;
+}

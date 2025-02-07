@@ -28,7 +28,8 @@ function ShoppingCart() {
                         headers: { Authorization: `Bearer ${token}` }
                     }
                 );
-                setProducts(response.data); // Set array of product IDs
+                setProducts(response.data); 
+                console.log(products);// Set array of product IDs
             } catch (error) {
                 console.error("Error fetching products:", error);
                 setError("Không thể lấy thông tin giỏ hàng.");
@@ -37,6 +38,7 @@ function ShoppingCart() {
 
         fetchProductsInCart();
     }, []);
+    
 
     useEffect(() => {
         const fetchProductDetails = async () => {

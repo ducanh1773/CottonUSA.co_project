@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
-import HeaderCottonUSA from "../CottonUSAPage/HeaderCottonUSA";
-import EndPageCottonUSA from "../CottonUSAPage/endPage";
+import HeaderCottonUSA from "../HeaderCottonUSA";
+import EndPageCottonUSA from "../endPage";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
 import ImageGallery from "react-image-gallery";
 import "@splidejs/splide/css/sea-green";
 import "react-image-gallery/styles/css/image-gallery.css";
 import { Link, useParams } from "react-router-dom";
-import ProductCottonUSAInHomePage from "../CottonUSAPage/HomePageCottonUSA/ProductInHomePage";
+import ProductCottonUSAInHomePage from "../HomePageCottonUSA/ProductInHomePage";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 function ProductDetailCottonUSA() {

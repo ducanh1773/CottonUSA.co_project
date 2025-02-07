@@ -4,6 +4,7 @@
     display: grid;
     justify-content: center;
     cursor: pointer;
+    margin-right: 2%;
 }
 
 .imgPrdOnHomePageCottonUSA img {

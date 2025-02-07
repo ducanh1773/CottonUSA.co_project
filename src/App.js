@@ -12,14 +12,14 @@ import ReturnPolicy from './CottonUSAPage/ChinhSachDoiTra';
 import PolicyAndService from './CottonUSAPage/PolIcyAndService';
 import SecurityPrivate from './CottonUSAPage/SecurityPrivate';
 import ContactPageUSA from './CottonUSAPage/ContactPageCottonUSA';
-import ProductDetailCottonUSA from './CottonUSAProductDetail';
+import ProductDetailCottonUSA from '../src/CottonUSAPage/CottonUSAProductDetail';
 import ShoppingCart from './CottonUSAPage/ShoppingCart';
 import OrderConfirmation from './CottonUSAPage/OrderConfirmation';
 import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
-
+import OrderTracking from './CottonUSAPage/OrderTracking'
 import {getTodos ,postTodo} from "../src/CottonUSAPage/SignInPageCottonUSA";
 
 const queryClient = new QueryClient()
@@ -40,7 +40,7 @@ function App() {
         <Route path='/products/:id'element={<ProductDetailCottonUSA></ProductDetailCottonUSA>}></Route>
         <Route path='/shopping_cart' element={<ShoppingCart></ShoppingCart>}></Route>
         <Route path='/order_confirmation' element={<OrderConfirmation></OrderConfirmation>}></Route>
-        
+        <Route path='/order_tracking' element={<OrderTracking></OrderTracking>}></Route>
       
       </Routes>
     </div>

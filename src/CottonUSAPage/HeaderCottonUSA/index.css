@@ -1,8 +1,12 @@
 .allHeaderPage {
+    height: 100px;
     width: 100%;
     display: flex;
     align-items: center;
     padding-top: 1%;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    margin-bottom: 2%;
+    
 }
 
 .allHeaderPage box-icon:hover {

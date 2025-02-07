@@ -4,6 +4,7 @@ import { jwtDecode } from "jwt-decode";  // Thêm thư viện jwt-decode
 import "./index.css";
 import { useNavigate } from 'react-router-dom';
 
+
 function OrderConfirmation({ cartId }) {
   const [products, setProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -20,7 +21,7 @@ function OrderConfirmation({ cartId }) {
   const [shippingFee, setShippingFee] = useState(null);
   const [detailedProducts, setDetailedProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const history = useNavigate();
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchProductsInCart = async () => {
       const token = localStorage.getItem("token");
@@ -164,7 +165,7 @@ function OrderConfirmation({ cartId }) {
 
       if (response.status === 201) {
         alert("Đặt hàng thành công!");
-        history.push("/");
+        navigate("/order_tracking");
       } else {
         setError("Đặt hàng không thành công. Vui lòng thử lại.");
       }
